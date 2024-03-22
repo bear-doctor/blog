@@ -1,0 +1,409 @@
+---
+title: Python实用
+sidebar_label: Python实用
+---
+
+## 一、turtle 海龟绘图
+
+## 二、 [sqlite3 数据库](https://docs.python.org/zh-cn/3.13/library/sqlite3.html#tutorial)
+1. 数据库中可以有多张表，每张表都由多条记录组成，每条记录由多个字段组成，在Sqlite中，有一张表为sqlite_master，包含了后续新增加的表的信息
+2. 字段是有类型的，text字符串，real浮点数，integer整数，blob二进制数据，date日期（本质是text），datetime日期+时间（本质也是字符串）
+3. SQl语句
++ CREATE TABLE  创建表
++ INSERT INTO   在表中插入记录
++ UPDATE        在表中更新记录
++ SELECT        在表中进行查询
++ DELETE        从表中删除记录
+#### 1. 创建数据库
+创建一个新的数据库并打开一个数据库连接以允许 sqlite3 通过它来工作。如果它不存在则会隐式地创建它
+```python
+import sqlite3
+db = sqlite3.connect("database.bd")  # 'database'是假设的一个数据库文件，以'db'为后缀
+```
+#### 2. 获取光标
+为了执行 SQL 语句并且从 SQL 查询中取得结果，我们需要使用光标
+```python
+cur = db.cursor()
+```
+#### 3. 创建表
+1. 创建表需要使用SQL语句CREATE TABLE
+结构：CREATE TABLE [if not exists] tablename(tableitem)。而tableitem格式为：name type constraint
+2. 需要用光标来执行SQL语句
+```python
+# 用字符串来包含SQL语句
+sql = 'CREATE TABLE if not exists student(id interger primary key, name text, gpa real, birthday date, picture blob)'
+cur.execute(sql)
+# 判断表格是否被创建了
+res = cur.execute('SELECT name FROM sqlite_master')
+print(res.fetchone())
+```
+#### 4. 插入数据
+需要使用INSERT INTO
+```python
+# 直接插入一个名为张三的学生
+cur.execute('INSERT INTO student VALUES(2000, '张三', 3.8, '2023-8-9', null)')
+# 可以利用列表一次插入多个数据，列表中每个元素都是一个元组
+data = [
+    (1700, '李四', 3.91, '2020-9-8', None),
+    (1800, '王五', 4.01, '2020-5-1', None)
+]
+for s in data:
+    cur.execute('INSERT INTO student VALUES(?,?,?,?,?)', (s[0], s[1], s[2], s[3], s[4]))
+# 这个？是占位符，会绑定后面的值
+# 除了像上面这样利用循环插入多个表，也可以简单快速地使用cur.executemany(...)
+cur.executemany('INSERT INTO student VALUES(?,?,?,?,?)', data)
+```
+#### 5. 查找数据
+1. 需要用SQL语句
++ SELECT * FROM tablename    检索所有记录
++ SELECT * FROM tablename ORDER BY age     检索所有记录，并按照年龄排列（默认升序）
++ SELECT name, age FROM tablename     检索所有记录，但只记录name, age两个字段
++ SELECT * FROM tablename WHERE name="张三"     检索所有名为张三的记录
++ SELECT * FROM tablename WHERE name="张三" and age > 18 ORDER BY age DESC     检索所有名为张三且年龄大于18的记录，并按照降序排列
+2. 需要用cur.execute(...)来执行，执行之后会返回本身（也就是cur）
+```python
+res = cur.execute("SELECT * from student")   # 返回结果行，保存在res中
+print(res.fetchone())  # (2000, 'Mike', 18, 3.8, '2020-08-09', None)
+print(res.fetchall()) 
+# [(1900, 'Peter', 19, 4.0, '2020-08-09', None),
+# (1800, 'Jhon', 20, 3.7, '2022-08-09', None)]  返回了一个列表
+res = cur.execute("SELECT * from student WHERE name='赵六'")
+print(res.fetchone())  # None，找不到记录就返回None
+```
+> 注意这里的fetchall()只得到了后面两个记录
+#### 6. 修改数据
+需要使用UPDATE语句
+```python
+cur.execute('UPDATE student SET age = 20')  # 修改所有记录的年龄
+cur.execute('UPDATE student SET gpa = 4.5 WHERE name = "Mike"')  # 修改Mike的gpa
+cur.execute("UPDATE student SET gpa=?, age=? WHERE name=?", (3.6, 25, 'Peter'))  # 修改Peter的gpa和年龄
+#-------------------------------#
+# (2000, 'Mike', 18, 4.5, '2020-08-09', None)
+# (1900, 'Peter', 25, 3.6, '2020-08-09', None)
+# (1800, 'Jhon', 20, 3.7, '2022-08-09', None)
+```
+#### 7. 删除数据
+需要用DELETE语句
+```python
+cur.execute('DELETE FROM student WHERE name="Jhon"')  # 删除Jhon这条记录
+```
+#### 8. 删除表格
+需要用到DROP TABLE
+```python
+cur.execute('DROP TABLE IF EXISTS student')
+res = cur.execute('SELECT * FROM sqlite_master')
+print(res.fetchone())  # None
+```
+#### 9. 设置blob字段的值
+
+#### 10. 注意事项
+1. 对于修改了表的操作，如插入，删除，更新，关闭数据库之前需要commit()，否则修改可能无效
+2. 可以使用try...excpet来避免数据库不存在导致的runtime error
+3. 关闭时要关闭光标，也要关闭连接
+
+
+## 三、jieba分词
+jieba是一个第三方的分词库
+```python
+import jieba
+
+s = '我们热爱中华人民共和国'
+lst = jieba.lcut(s)  # 默认使用精确方式分词，即分出的结果正好组成原文
+print(lst)  # ['我们', '热爱', '中华人民共和国']
+
+lst = jieba.lcut(s, cut_all=True)  # 使用全模式分词，输出所有可能的结果
+print(lst)  # ['我们', '热爱', '中华', '中华人民', '中华人民共和国', '华人', '人民', '人民共和国', '共和', '共和国']
+
+lst = jieba.lcut_for_search(s)  # 使用搜索引擎模式分词
+print(lst)  # ['我们', '热爱', '中华', '华人', '人民', '共和', '共和国', '中华人民共和国']
+
+l = '拼多多是个网站'
+lst1 = jieba.lcut(l)
+print(lst1)  # ['拼', '多多', '是', '个', '网站']
+jieba.add_word('拼多多')
+print(jieba.lcut(l))  # ['拼多多', '是', '个', '网站']
+```
+
+## openpyxl库处理xlsx文件
+
+xlsx文件的结构是：一个工作workbook，包含了多个表格sheet，每个表格中包含若干行和列，每行每列中都包含若干单元格
+
+### 获得xlsx文件
+有两种方法：
+1. 导入一个已有的xlsx文件作为工作目录
+2. 创建一个新的xlsx文件作为工作目录
+```python
+import openpyxl as pxl
+wb = pxl.Workbook()   # 新建一个xlsx文件，但没存入硬盘中
+wb1 = pxl.load_workbook(path)   # 导入一个已有的xlsx文件
+```
+### 表格
+#### 1. 获得表格
+有三种方法：
+1. 通过序号获得表格
+2. 通过表格名获得表格
+3. 通过active获得当前活动的表格
+```python
+ws = wb.worksheets[0]
+ws = wb[title]
+ws = wb.active
+```
+#### 2. 新建表格
+```python
+sheet = wb.create_sheet(title[, index])
+ws = wb.copy_worksheet(sheet)  # 拷贝表格
+```
+这当中，index指的是插入的位置，如果是0，则新生成的表格插入最前面，如果没有赋值，则默认是插入到最后
+
+#### 3. 表格名
+1. 每一个表格都有自己的名字，可以通过`title`获得
+```python
+print(ws.title)
+# 也可以通过sheetnames一次获得多个表格名
+print(wb.sheetnames)
+```
+2. 无论在什么时候，都可以直接通过赋值修改表格名
+```python
+ws.title = 'first'
+print(ws.title)  # first
+```
+#### 4. 表格信息
+
+### 行和列
+1. 最小行号，最大行号，最小列号，最大列号
+```python
+print(ws.min_row, ws.max_row)
+print(ws.min_column, ws.max_column)
+```
+2. 获取多行或多列
+有三种方法：
++ 类似切片的方法
+```python
+ws[2:10]  # 返回第2行到第10行所有单元格，每一行的单元格都被包含在一个元组中
+ws['A:E']  # 同上，要注意的是这两个切片都是包含两端的
+ws[2]  # 只要一行
+ws["A"]  # 只要一列
+
+```
++ 调用iter_cols()和iter_rows()
+```python
+# 注意：这里返回的和切片不一样，这里返回的是一个迭代器
+for col in ws.iter_cols(min_row=1, max_row=2, min_col=2, max_col=4):
+    for cell in col:
+        print(cell)
+# 这里的ws.iter_cols返回的是一个迭代器，而col是根据迭代器遍历所产生的一列
+# <Cell 'Sheet'.B1>
+# <Cell 'Sheet'.B2>
+# <Cell 'Sheet'.C1>
+# <Cell 'Sheet'.C2>
+# <Cell 'Sheet'.D1>
+# <Cell 'Sheet'.D2>
+
+#---------------------------#
+
+# iter_rows()与iter_cols的用法一样，参数一样，只不过返回的是按行遍历的迭代器
+for row in ws.iter_rows(min_row=1, max_row=2, min_col=2, max_col=4):
+    for cell in row:
+        print(cell)
+# <Cell 'Sheet'.B1>
+# <Cell 'Sheet'.C1>
+# <Cell 'Sheet'.D1>
+# <Cell 'Sheet'.B2>
+# <Cell 'Sheet'.C2>
+# <Cell 'Sheet'.D2>
+```
+
++ 如果并不打算只选中一部分行列，可以使用rows和columns属性
+```python
+# rows属性会返回一个遍历所有行的迭代器
+for row in ws.rows:
+    for cell in row:
+        print(cell.value)
+# columns属性类似
+```
+
+### 读取单元格
+这里要注意，在openpyxl中，表格，行，列，单元格都是一个对象
+1. 单元格属性
++ type(cell.value): 只有四种值: int, float, datetime.datetime, str
++ cell.coordinate: 单元格的行号列号
++ cell.col_idx: 单元格列号，没有行号这一属性
++ cell.number_format: 数的显示格式，有General, 0.00%, 0.00E+00等格式
+
+1. 通过行号列号直接获取
+```python
+c = ws['A4']  # 注意：仅获得了A4单元格对象
+print(c.value)  # 获得单元格的值
+
+#-----------------------------------#
+
+a = ws.cell(row=4, column=2)
+print(a.value)
+# 还可以设置value
+a = ws.cell(row=4, column=2, value=10)
+print(a.value)  # 10
+```
+
+2. 通过循环读取单元格
+```python
+# 读取单元格，一行一行来读取
+for row in ws.rows:
+    for cell in row:
+        print(cell.value, end=" ")
+    print("")
+# 读取一行的元素
+for cell in ws[2]:
+    print(cell.value)
+# 读取多行元素
+for row in ws.iter_rows(min_row=1, max_row=3, max_col=4):
+    for cell in row:
+        print(cell.value, end=" ")
+    print("")
+```
+> 其实这个循环读取单元格，就是利用了读行，读列，然后再读取每一行，每一列中的元素，因此这里的内容需要结合前面的行列中的内容来看
+
+
+### 给单元格赋值
+两种方法:
+1. 直接给单元格的value属性赋值
+2. 通过append方法，在表格中加入一行
+```python
+# 第一种
+ws['E9'].value = 10
+# 第二种
+dateRows = [
+    [1, 2, 3, 4],
+    ['apple', 'banana', 'orange', 'peach'],
+    [1.2, 1.3, 1.4, 1.5],
+    ['=sum(A1:A3)']
+]
+for row in dateRows:
+    ws.append(row)
+# 1 2 3 4 
+# apple banana orange peach 
+# 1.2 1.3 1.4 1.5 
+# =sum(A1:A3) None None None 
+```
+
+### 只读取值的方式
+在读取行列的时候，可以通过Worksheet.values这一属性，只返回每一行或每一个列的单元格的value，并形成一个元组，最后得到一个元组列表
+```python
+# 读取所有值，这是以行的方式来读取的
+for values in ws.values:
+    for value in values:
+        print(value, end=" ")
+    print("")
+# 1 2 3 4 
+# apple banana orange peach 
+# 1.2 1.3 1.4 1.5 
+# =sum(A1:A3) None None None 
+
+#------------------------------------#
+
+# 在通过iter_cols(),iter_rows()方法读取行列的时候，也可以设置values_only = True
+for row in ws.iter_rows(min_row=1, max_row=3, max_col=4, values_only=True):
+    for value in row:
+        print(value, end=" ")
+    print("")
+# 1 2 3 4 
+# apple banana orange peach 
+# 1.2 1.3 1.4 1.5 
+```
+
+### [修改样式](https://openpyxl-chinese-docs.readthedocs.io/zh_CN/latest/styles.html#id6)
+样式有两种：单元格样式，命名样式
++ 单元格样式在对象之间共享，一旦被分配之后就无法更改。
+#### 1. 修改列宽，行高
+假设B4的字符长度较大，为了能够使字符显示出来，需要加宽列
+```python
+ws.column_dimension["B"].width = len(str(ws["B4"].value))
+# 这个width指的是字符数量
+ws.row_dimension[4].height = 48
+```
+#### 2. 修改指定单元格的样式
+1. 在修改之前需要先导入对应的库模块，如
+```python
+from openpyxl.styles import 
+Font, colors, PatternFill, Alignment, Side, Border
+```
+2. 设置边框线型
+```python
+side = Side(style='thin', color="00FF0000")   # 还有thick, medium, dotted, double
+```
+3. 设置边框类型
+边框类型其实就是边框的位置，哪一条边上有边线，边线的类型是什么
+```python
+border = Border(left=side, right=side, top=side, bottom=side)
+for row in ws.rows:
+    for cell in row:
+        cell.border = border
+```
+4. 设置填充
+```python
+ws['A1'].fill = PatternFill(patternType="solid", fgColor='00ff00')
+```
+5. 设置文字
+```python
+ws['A1'].font = Font(name='Arial', size=15, color='00FF0000', italic=True, bold=True, underline='none')
+# 通过Font(...)来构造出一个Font对象
+# name是指文字类型名
+# size是文字大小
+# color是文字颜色，用的aRGB格式，十六进制，前面两位是a，后面分别是RGB
+# italic是文字是否倾斜
+# bold是文字是否是粗体
+# underline是下划线
+```
+6. 对齐
+```python
+ws['A1'].alignment = Alignment(horizontal='general', vertical='bottom', indent=0, text_rotation=0)
+# horizontal是水平对齐
+# vertical是垂直对齐
+# indent是缩进
+# text_rotation是文本旋转
+```
+
+7. 合并单元格
+```python
+ws.merge_cells('C2:D3')
+# 若想要设置单元格的样式，只需要设置左上角单元格的样式即可
+top_left_cell = ws['C2']
+```
+
+8. 插入图片
+```python
+ws.add_image(img.path, "A1")
+```
+
+9. 复制样式
+```python
+from copy import copy
+ft1 = Font(name='Arial', size=15)
+ft2 = copy(ft1)
+
+#----------------------------------#
+
+# 也可以使用font中的copy
+ws.['A2'].font = ws['A1'].font.copy(italic=True)
+# 在复制的时候还将新的字体设置为斜体
+# 单元格样式对象是不可修改的，只可能修改指向
+```
+
+10. 给一行或一列统一设置样式
+```python
+col = ws.column_dimension['A']
+col.font = Font(bold=True)
+```
+
+11. [**内置样式**](https://openpyxl.readthedocs.io/en/latest/styles.html#using-builtin-styles)
+```
+ws['A1'].style = 'Title'
+```
+
+### 保存文件
+```python
+wb.save(path)
+```
+
+
+## 用Pillow处理图片
+

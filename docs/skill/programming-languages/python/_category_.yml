@@ -1,0 +1,12 @@
+# position: 2.5 # float position is supported
+label: 'Python学习'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: Python学习
+  description: '根据Python官方教程，Mooc北大的内容来记录的笔记'
+

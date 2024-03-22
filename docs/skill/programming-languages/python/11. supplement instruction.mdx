@@ -1,0 +1,138 @@
+---
+title: 补充说明
+sidebar_label: 补充说明
+---
+
+## [一、时间datetime](https://docs.python.org/zh-cn/3/library/datetime.html)
+#### 1. 有效的类型
+1. datetime.date: 一个理想化的简单型日期，它假设当今的公历在过去和未来永远有效。 属性: year, month, and day
+2. datetime.time: 一个独立于任何特定日期的理想化时间，它假设每一天都恰好等于 24*60*60 秒。 （这里没有“闰秒”的概念。） 包含属性: hour, minute, second, microsecond 和 tzinfo
+3. datetime.datetime: 日期和时间的结合。属性：year, month, day, hour, minute, second, microsecond, and tzinfo
+4. datetime.timedelta: 表示两个 date 对象或 time 对象，或者 datetime 对象之间的时间间隔，精确到微秒。
+5. datetime.tzinfo: 一个描述时区信息对象的抽象基类。 用来给 datetime 和 time 类提供自定义的时间调整概念（例如处理时区和/或夏令时）
+6. datetime.timezone: 一个实现了 tzinfo 抽象基类的子类，用于表示相对于 世界标准时间（UTC）的偏移量。
+
+#### 2. 常量
+1. datetime.MINYEAR = 1
+2. datetime.MAXYEAR = 9999
+3. datetime.UTC
+> 这说明datetime表示的年数从(1 - 9999)
+
+#### [3. timedelta类对象](https://docs.python.org/zh-cn/3/library/datetime.html#timedelta-objects)
+1. 构造函数
+```python
+class datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+# 所有参数都是可选的并且默认为 0。 这些参数可以是整数或者浮点数，也可以是正数或者负数
+```
+> 只有 days, seconds 和 microseconds 会存储在内部。别的都会换算为这几个属性，换算规则看官网
+2. 类属性
++ timedelta.min: 最大负值timedelta对象，即timedelta(-999999999)，这个是天数的最小值
++ timedelta.max: 即timedelta(days=999999999, hours=23, minutes=59, seconds=59, microseconds=999999)
++ timedelta.days
++ timedelta.seconds
++ timedelta.microseconds
+3. 方法
+timedelta.total_seconds()，返回这个间隔对象占用了多少秒
+4. 运算
++ 加减乘除取余，返回一个timedelta对象（如果是两个timedelta对象相除，则会返回一个float，而不是timedelta对象）
++ 正负号，绝对值，返回一个timedelta对象，负号会把days,seconds,microseconds这些属性全部加上符号
+```python
+oneyear = datetime.timedelta(days=365)   # 创建一个timedelta对象
+tenyears = oneyear * 10   # 乘法
+print(tenyears.days)   #>>>3650
+fiveyears = tenyears // 2   # 除法
+print(fiveyears.days)   # 1825
+threeyears = oneyear * 3  
+twoyears = fiveyears - threeyears   # 减法
+print(twoyears.days)  # 730
+minustwoyears = -twoyears   
+print(minustwoyears.days)   # -730
+print(fiveyears / twoyears)   # 2.5
+print(abs(minustwoyears).days)   # 730
+```
+
+#### [4. date对象](https://docs.python.org/zh-cn/3/library/datetime.html#date-objects)
+1. 构造函数
+```python
+datetime.date(year, month, day)
+```
+2. 属性
++ datetime.date.min, 返回datetime.date(MINYEAR, 1, 1)
++ datetime.date.max, 返回datetime.date(MAXYEAR, 12, 31)
++ date.year
++ date.month
++ date.day
+3. 方法
++ datetime.date.today(), 返回当前的本地日期，是一个date对象
++ datetime.date.fromisoformat(date_string), 根据iso格式的date_string得到一个date对象（iso格式：YYYY-MM-DD）
++ datetime.date.toordinal(), 返回日期的预期格列高利历序号，其中公元 1 年 1 月 1 日的序号为 1
++ datetime.date.fromordinal(ordinal), 返回对应于预期格列高利历序号的日期
++ datetime.date.fromtimestamp(timestamp), 由时间戳得到一个date对象
++ datetime.date.weekday(), 返回date对象是星期几，周一是0，周日是6
+> time模块下的time()就可以返回当前的时间戳
+4. 运算
++ date2 = date1 + timedelta
++ date2 = date1 - timedelta
++ timedelta = date1 - date2
++ date1 < date2
+
+#### [5. datetime对象](https://docs.python.org/zh-cn/3/library/datetime.html#timedelta-objects)
+1. 构造函数
+```python
+ class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
+```
+2. 属性
++ datetime.datetime.min
++ datetime.datetime.max
++ datetime.datetime.year
++ datetime.datetime.month
++ datetime.datetime.day
++ datetime.datetime.hour
++ datetime.datetime.minute
++ datetime.datetime.second
++ datetime.datetime.microsecond
+3. 方法
++ datetime.datetiem.today()  == date.fromtimestamp(time.time())
++ datetime.datetime.now(tz=None), 如果tz=None, 那么now()类似于today()
++ datetime.datetime.fromisoformat(date_string)
++ datetime.datetime.fromtimestamp(timestamp)
++ datetime.datetime.fromordinal(ordinal), 
++ datetime.datetime.toordinal(), 返回日期的预期格列高利历序号
++ datetiem.datetime.timestamp(), 返回对应于 datetime 实例的 POSIX 时间戳。此返回值是与 time.time() 返回值类似的 float 对象。
++ datetime.datetime.weekday(), 返回一个整数代表星期几，星期一为 0，星期天为 6
++ datetime.datetime.isoweekday(), 返回一个整数代表星期几，星期一为 1，星期天为 7
++ datetime.datetime.date(), 返回具有同样 year, month 和 day 值的 date 对象。
++ datetime.datetime.time(), 返回具有同样 hour, minute, second, microsecond 和 fold 值的 time 对象
+4. 运算
++ datetime2 = datetime1 + timedelta
++ datetime2 = datetime1 - timedelta
++ timedelta = datetime1 - datetime2
++ datetime1 < datetime2
+
+#### [6. time对象](https://docs.python.org/zh-cn/3/library/datetime.html#timedelta-objects)
+
+#### strftime()和strptime()
+date, datetime 和 time 对象都支持 strftime(format) 方法，可用来创建由一个显式格式字符串所控制的表示时间的字符串。
+**相反地**，datetime.strptime(date_string, format) 类会根据表示日期和时间的字符串和相应的格式字符串来创建一个 datetime 对象。
+
+1. [**Format Codes**](https://docs.python.org/zh-cn/3/library/datetime.html#strftime-and-strptime-format-codes) 
+
+
+## random随机数
+1. 方法
++ random.random(), 生成一个[0,1]之间的随机数
++ random.uniform(x, y), 生成一个[x, y]之间的随机数
++ random.randint(x, y), 生成一个[x, y]之间的随机数
++ random.randrange(x, y, k), 生成一个range(x, y, k)的数
++ random.choice(x), 在序列x中随机抽取一个数
++ random.sample(x, k), 在序列x中随机出去一个长度为k的子序列
++ random.shuffle(x), 打乱x序列，序列必须是可变的
+2. 随机数种子
+计算机程序的代码是固定的，因此若是有明确的输入，那么输出一定是可预测的，而现实生活中真正随机数是无法预测的，因此，计算机程序生成的是伪随机数。
+
+在生成随机数之前，要先给程序设定一个初始值，让程序可以生成随机数，这个初始值就是随机数种子，若是随机数种子设为一个常量，那么每次启动程序生成的随机数就是固定的。在Python中，random库中的随机数种子默认设为了随时间变化而变化
+
+```python title='设定随机数种子'
+random.seed([x])
+# x可以随便什么数，字符串
+```

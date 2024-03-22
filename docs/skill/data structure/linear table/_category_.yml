@@ -1,0 +1,10 @@
+# position: 2.5 # float position is supported
+label: '数据结构'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 数据结构

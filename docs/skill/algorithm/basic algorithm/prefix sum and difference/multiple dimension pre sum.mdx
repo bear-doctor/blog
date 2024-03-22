@@ -1,0 +1,58 @@
+---
+title: 前缀和矩阵
+sidebar-label: 前缀和矩阵
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## 定义
+在前缀和矩阵中，每一个位置 $(x_1, y_1)$ 对应的值意味着以这个坐标为右下角的原矩阵的所有元素的和。
+
+## 用途
+可用于快速求出一个矩阵中某一个范围内的元素和
+
+## 实现
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/798/)
+
+</p>
+</details>
+
+时间复杂度：
+1. 构造前缀和的时间复杂度：$O(n^2)$
+2. 求某一范围内的元素和：$O(1)$
+
+<Tabs>
+<TabItem value="求前缀和矩阵" label="求前缀和矩阵" default>
+
+```cpp
+// 求前缀和矩阵
+// 由于是全局数组，因此数组内元素自动全为0
+int mydata[N][N], pre[N][N];
+
+void pre_sum(int n, int m) {
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= m; j++) {
+            pre[i][j] = mydata[i - 1][j - 1] + pre[i - 1][j] + pre[i][j - 1] - pre[i - 1][j - 1];
+        }
+    }
+}
+```
+</TabItem>
+<TabItem value="求某一范围内的元素和" label="求某一范围内的元素和">
+
+```cpp
+//求某一范围内的数据和
+int sum_in_range(int x1, int y1, int x2, int y2)
+{
+   return pre[x2][y2] - pre[x1 - 1][y2] - pre[x2][y1 - 1] + pre[x1 - 1][y1 - 1];
+}
+```
+
+</TabItem>
+</Tabs>

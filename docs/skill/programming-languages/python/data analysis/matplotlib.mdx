@@ -1,0 +1,256 @@
+---
+title: matplotlib的使用
+sidebar_label: matplotlib
+---
+
+## 基本知识
+1. matplotlib中的图都是画在Figure上的，而每个图像都是一个子图Axes，在一个Figure上可以有多个子图Axes
+```python title='创建子图'
+# 导入模块
+import matplotlib.pyplot as plt
+
+# subplots返回一个figure对象和一个Axes对象数组
+# 单独返回一个Axes对象
+fig, ax = plt.subplots()
+
+# 返回多个Axes对象
+fig, axs = plt.subplots(2, 2)
+
+# 使用元组的拆解给每一个ax都赋值一个Axes对象
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+```
+
+## 绘制基本图形
+### 直方图
+#### 1. 普通直方图
+```python
+# 画直方图
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+import random
+
+# 让中文正确显示
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+fig, ax = plt.subplots()
+# cordx 是直方图中直方柱的中心点
+cordx = range(10)
+# cordy 是直方图的直方柱的高度，这里之所以转成list，是因为我想用random.shuffle，而random.shuffle只能对可变序列进行原地修改，返回的是None
+cordy = list(range(0, 10))
+random.shuffle(cordy)
+ax.bar(x=cordx, height=cordy, color="blue", width=1,edgecolor="white")
+ax.set_title('直方图')
+plt.show()
+```
+#### 2. 堆叠直方图
+```python
+# 画堆叠直方图的关键在于堆在上面的直方的bottom应该是下面的直方的高度
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+import random
+
+# 让中文正确显示
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+fig, ax = plt.subplots()
+month = range(1, 13)
+profit1 = list(range(10, 130, 10))
+random.shuffle(profit1)
+profit2 = list(range(10, 130, 10))
+random.shuffle(profit2)
+
+# 画图
+ax.bar(x=month, height=profit1, color="red", label='Mihoyo', width=0.5)
+# highlight-start
+# 关键就在于这个bottom的设置
+ax.bar(x=month, height=profit2, color='green', label='Timi', width=0.5, bottom=profit1)
+# highlight-end
+
+# 设置刻度
+xlabel = ['Jan', 'Feb','Mar','Apr','May','Jun','Jul', 'Aug', 'Sep', 'Oct','Nov', 'Dec']
+ax.set_xticks(month)
+ax.set_xticklabels(xlabel)
+ax.set_ylabel('Profit')
+ax.set_xlabel('2020年')
+
+# 设置说明图，根据画图时的label属性，会自动找空白处放置说明图
+ax.legend()
+
+# 设置标题
+ax.set_title('堆叠直方图')
+
+plt.show()
+```
+
+#### 3. 画多个直方图
+```python
+# 画多个直方图
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+import numpy  as np
+import random
+
+# 让中文正常显示
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+# 设置窗口大小横10, 纵5
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# 设置横纵坐标
+profit ={
+    'jindong': [random.randint(10, 100) for i in range(12)],
+    'taobao': [random.randint(10, 100) for i in range(12)],
+    'tianmao': [random.randint(10,100) for i in range(12)]
+}
+xlabel = ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+# 每一个x轴标签的位置，也是直方柱的中心
+cordx = np.arange(1, 13)
+# 为了让cordx就是直方柱的中心，需要将起始点向左偏移刻度间距的一半
+# highlight-start
+start = cordx - 0.5
+# highlight-end
+width = 1 / (len(profit.keys()) + 1)
+multiplier = 1
+
+# highlight-start
+for company, cprofit in profit.items():
+    offset = width * multiplier
+    ax.bar(x = start+offset, height=cprofit, label=company, width=width)
+    multiplier += 1
+# highlight-end
+ax.set_xticks(cordx)
+ax.set_xticklabels(xlabel)
+ax.set_ylabel('Profit')
+ax.set_xlabel('2020年')
+ax.set_title('2020年各电商收入情况')
+ax.legend(title='company')
+plt.show()
+```
+
+### 散点图
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots()
+
+x = np.array([10, 20, 30, 40, 30, 50])
+y = np.array([100,200,300,400,500,600])
+
+# marker属性指定形状， c 是 color 的缩写，r 是 red 的缩写
+ax.scatter(x, y, marker='x', c='r')
+plt.show()
+```
+
+### 折线图
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 曲线其实就是利用折线图来画的，为了实现平滑的视觉效果，要用很多个密集的点
+x = np.linspace(0,10,100)
+y = 4 + np.sin(x)
+
+fig, ax = plt.subplots()
+ax.plot(x, y, linewidth=2)
+
+ax.set(xlim=(0,8), xticks=np.arange(0,11),
+       ylim=(0,8),yticks=np.arange(1,8))
+
+plt.show()
+```
+
+### 饼图
+```python
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+ax = plt.figure().add_subplot()
+
+
+def drawPie(ax):
+    sectors = [12.5 , 20, 45, 22.5]
+    labels = ['A', 'B', 'C', 'D']
+    expl = [0, 0, 0.1, 0]
+    colors=['red','skyblue','green','orange']
+    ax.pie(x=sectors, labels=labels, startangle=90,autopct='%.2f', labeldistance=1.1, pctdistance=0.6, explode=expl, shadow=True, colors=colors)
+    ax.set_title('饼图')
+```
+
+### 热力图
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+data = np.random.randint(0, 100, 30).reshape((5,6))
+xlabels = ['Beijing','Tianjing','Shanghai','Guangzhou','Chongqin','Sichuan']
+ylabels = ['2016', '2017', '2018', '2019', '2020']
+
+ax = plt.figure().add_subplot()
+ax.set_xticks(range(len(xlabels)))
+ax.set_xticklabels(xlabels)
+ax.set_yticks(range(len(ylabels)))
+ax.set_yticklabels(ylabels)
+heatmap = ax.imshow(data, cmap=plt.cm.hot, aspect='equal', vmin=0, vmax=255)
+for i in range(len(xlabels)):
+    for j in range(len(ylabels)):
+        ax.text(i, j, data[j][i], ha='center', va='center', color='blue', size=16)
+plt.colorbar(heatmap)
+plt.xticks(rotation=45, ha='right')
+ax.set_title('热力图')
+plt.show()
+```
+
+### 雷达图
+```python
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+import numpy as np
+from math import pi
+
+rcParams['font.family'] = rcParams['font.sans-serif'] = 'SimHei'
+
+# 绘制雷达图
+def drawRadar(ax):
+    labels = np.array(['EQ', 'IQ', '人缘', '魅力', '财富', '体力'])
+    attrnum = len(labels)
+    names = ['张三', '李四','王五']
+    data = [
+        [0.4, 0.32, 0.35], [0.85, 0.35, 0.3],
+        [0.40,0.32,0.35], [0.40, 0.82, 0.75],
+        [0.14, 0.12, 0.35],[0.80, 0.92, 0.35]
+    ]
+    angles = [2 * pi * i /attrnum for i in range(attrnum)]
+    angles2 = [angle * 180 / pi  for angle in angles]
+    ax.set_thetagrids(angles2, labels=labels,fontproperties ='SimHei')
+    ax.fill(angles, data, alpha=0.25)
+    ax.legend(names, loc=(0.95, 0.9))
+
+# 这里一定要加projection='polar',这样生成的子图对象中才是以极坐标开始的，并且也只有这样，这个Axes对象中才有set_thetagrids方法
+fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
+# ----------------------------- #
+# 或者以下面的方式书写也可以
+# fig = plt.figure(figsize=(10,5))
+# ax = fig.add_subplot(projection='polar')
+# ----------------------------- #
+drawRadar(ax)
+plt.show()
+```
+
+### 绘制多个图
+```python
+# 以上面的雷达图为例子
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2, subplot_kw=dict(projection='polar'))
+
+drawRadar(ax1)
+drawRadar(ax2)
+drawRadar(ax3)
+drawRadar(ax4)
+plt.show()
+```

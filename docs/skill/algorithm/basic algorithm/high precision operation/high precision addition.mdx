@@ -1,0 +1,60 @@
+---
+title: 高精度加法
+sidebar_label: 高精度加法
+sidebar_position: 1
+---
+
+## 定义
+所谓高精度加法，就是两个长度很大的数进行加法。由于长度太大，没有任何一种数据结构能够存储这一数据，因此需要借助数组来存储这一数据。
+
+## 实现
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/description/793/)
+
+</p>
+</details>
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+
+vector<int> num1, num2, sum;
+
+void add(vector<int> &num1, vector<int> &num2){
+    //初始进位设置为0
+    int t = 0;
+    for(int i = 0; i < num1.size() || i < num2.size(); i++){
+        if(i < num1.size()) t += num1[i];
+        if(i < num2.size()) t += num2[i];
+        sum.push_back(t % 10);
+        t = t / 10;
+    }
+    //最后一次的进位
+    if(t > 0) sum.push_back(t);
+}
+
+int main(){
+
+    //由于数据太大，需要借助字符串来输入
+    string A, B;
+    cin >> A >> B;
+
+    //将字符串中的每一位数字由字符转换成整型数据，并存入vector中
+    for(int i = A.size() - 1; i >= 0; i--) num1.push_back(A[i] - '0');
+    for(int i = B.size() - 1; i >= 0; i--) num2.push_back(B[i] - '0');
+    
+    add(num1, num2);
+    
+    //因为是倒序存储，所以要倒序输出
+    for(int i = sum.size() - 1; i >= 0; i--) printf("%d", sum[i]);
+    
+    return 0;
+}
+```
+
+> 存储的时候需要倒序存储，因为最后可能会存在着进位，所以需要插入数字，那么在数组末尾插入数字较为方便，所以选择倒序存储，将个位存储在第0个位置。

@@ -1,0 +1,58 @@
+---
+sidebar-label: 栈
+title: 栈
+sidebar-position: 2
+---
+
+## 定义
+从逻辑上来看，栈也是一个线性表，数据直接呈一对一的关系。栈实际上是***操作受限的线性表***，只允许从栈顶插入元素（称为入栈），只允许从栈顶删除元素（称为出栈）。
+
+![栈](https://bear-img-1319754387.cos.ap-guangzhou.myqcloud.com/website/data%20structure/stack.png)
+
+## 代码实现
+```cpp
+#include<iostream>
+using namespace std;
+
+const int N = 100010;
+
+class Stack {
+public:
+    // 构造函数
+    Stack() {
+        top = 0;
+    }
+    // 判断是否为空
+    bool isEmpty() {
+        return top == 0;
+    }
+    // 判断是否为满
+    bool isFull() {
+        return top == N;
+    }
+    // 向栈顶插入一个数
+    bool push(int x) {
+        if(isFull()) return false;
+        data[top++] = x;
+    }
+    // 删除栈顶元素
+    bool pop() {
+        if(isEmpty()) return false;
+        top--;
+    }
+    // 查询栈顶元素
+    int queryTop() {
+        return data[top - 1];
+    }
+private:
+    int data[N];
+    int top;
+};
+
+```
+
+## 相关题目
+
+[**Acwing：模拟栈**](https://www.acwing.com/activity/content/problem/content/865/)
+
+[**Acwing：表达式求值**](https://www.acwing.com/activity/content/problem/content/3648/)

@@ -1,0 +1,57 @@
+---
+title: 一维前缀和
+sidebar_label: 一维前缀和
+sidebar_class_name: green
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## 定义
+一个数组中，某一个位置的前缀和是指其前面包括自身所有数的和
+
+## 用途
+可用于快速求出一个数组中某一个范围内的元素和
+
+## 实现
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/797/)
+
+</p>
+</details>
++ 思路：[i, j] 范围内的元素和可以用 s[j] - s[i-1]，s是前缀和数组
++ 时间复杂度：
+    1. 构造前缀和的时间复杂度：$O(n)$
+    2. 求某一范围内的元素和：$O(1)$
+
+<Tabs>
+<TabItem value="求前缀和" label="求前缀和" default>
+
+```cpp
+//求前缀和数组
+//a 用于存储原数组，s 用于存储前缀和数组，n 用于存储数组元素个数
+//注意：a的下标从1开始，s的下标也从1开始，这是因为规定了原序列下标是从1开始
+void pre_sum(int a[], int s[], int n)
+{
+    //为了保证求[1,n]范围内的和时，公式可以与求[l,r]范围内的和的公式一样,需要定义s[0] = 0
+    s[0] = 0;
+    for(int i = 1; i < n; i++) s[i] = s[i-1] + a[i] 
+}
+```
+</TabItem>
+<TabItem value="求某一范围内的元素和" label="求某一范围内的元素和">
+
+```cpp
+//求某一范围内的数据和
+int sum_in_range(int s[], int l, int r)
+{
+   return s[r] - s[l-1]; 
+}
+```
+
+</TabItem>
+</Tabs>

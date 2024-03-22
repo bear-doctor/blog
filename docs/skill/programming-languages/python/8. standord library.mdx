@@ -1,0 +1,50 @@
+---
+title: 操作系统接口
+sidebar_label: 操作系统接口
+---
+
+### [10.1 操作系统接口](https://docs.python.org/zh-cn/3/tutorial/stdlib.html#operating-system-interface)
+1. [**os模块**](https://docs.python.org/zh-cn/3/library/os.html#)提供了许多与操作系统交互的函数
+2. 但在导入模块的时候需要注意
+```python
+#应该采用的方式
+import os
+#不该采用的方式，因为这会导致名称冲突
+from os import *
+```
+3. Python的文件夹操作
++ `os.chdir(x)`, 将程序当前目录修改为x
++ `os.getcwd()`, 得到程序的当前目录
++ `os.listdir(x)`, 返回一个列表，里面是x文件夹中所有的子文件名和文件夹的名字（不是递归的）
++ `os.mkdir(x)`, 创建文件夹x
++ `os.path.exists(x)`, 判断文件或文件夹x是否存在
++ `os.path.getsize(x)`, 获取文件x的大小（字节）
++ `os.path.isfile(x)`, 判断x是不是文件
++ `os.rmdir(x)`, 删除目录x
++ `os.remove(x)`, 删除文件x
++ `os.rename(x, y)`, 将文件或文件夹改名为y，不仅可以起到改名的作用，还可以起到移动文件或文件夹的作用
++ `shutil.copyfile(x, y)`, 拷贝文件x到y，若y本来就存在，会被覆盖
+
+3. 对于**日常文件和目录管理任务**， [**shutil**](https://docs.python.org/zh-cn/3/library/shutil.html#module-shutil)模块提供了更易于使用的更高级别的接口
+
+### [10.2 文件通配符](https://docs.python.org/zh-cn/3/tutorial/stdlib.html#file-wildcards)
+glob模块提供了一个在目录中使用通配符搜索创建文件列表的函数
+
+### [10.3 命令行参数](https://docs.python.org/zh-cn/3/tutorial/stdlib.html#command-line-arguments)
+1. sys模块中存储着argv属性，命令行参数作为**列表**存储在这个属性里
+
+### 10.4 绘图模块
+```python
+import turtle
+turtle.setup(width, height)  # 设置绘图界面的宽度和高度
+turtle.penup()  # 举起画笔
+turtle.pendown()  # 放下画笔
+turtle.pensize(size)  # 设置画笔的粗细
+turtle.goto(x, y)  # 画笔移动到(x,y)
+turtle.pos()  # 获得画笔的位置
+turtle.fd(length)  # 画笔向前画length长度
+turtle.right(angle)  # 画笔向右转angle
+turtle.left(angle)  # 画笔向左转angle
+turtle.seth(angle)  #将画笔角度设置为angle
+turtle.done()  # 维持画面
+```

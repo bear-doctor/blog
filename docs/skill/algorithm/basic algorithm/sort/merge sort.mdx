@@ -1,0 +1,58 @@
+---
+title: 归并排序
+sidebar_label: 归并排序
+sidebar_position: 1
+---
+
+## 定义
+将两个有序的序列合并为一个有序序列，即为归并排序
+
+## 实现
+归并排序的**总体思路**：
+1. 先选分界点
+2. 递归地将分界点左右两侧的数据进行归并排序
+3. 将已经排好序的左右两侧数据进行归并排序
+
+这个思路的关键在于：如何合并两个有序的序列？
+
+**合并两个有序序列**的思路是：
+1. 有两个游标 i 和 j。起初，i 指向左侧第一个元素，j 指向右侧第一个元素（初始值），开辟一个临时空间temp，用于临时存储排好序的总体序列
+2. 比较a[i]和a[j]，假设a[i] < a[j]，此时应将a[i]放入temp中，然后向后移动游标 i。（对应的j也是一样的思路）
+3. 当某一个游标达到末尾的时候，可以直接将另一个游标后的所有元素直接一个个复制入temp中。
+
+时间复杂度是：$O(log_2n)$
+
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/789/)
+
+</p>
+</details>
+
+```cpp
+void merge_sort(int q[], int l, int r){
+    if(l == r) return;
+    
+    //确定分界点
+    int mid = l+r>>1;
+    
+    //递归排序左右边
+    merge_sort(q, l, mid);
+    merge_sort(q, mid+1, r);
+    
+    //将最后两个排好序的归并
+    int i = l, j = mid+1, k = 0;
+    while(i<=mid && j<=r){
+        if(q[i] < q[j]) temp[k++] = q[i++];
+        else temp[k++] = q[j++];
+    }
+    while(i<=mid) temp[k++] = q[i++];
+    while(j<=r) temp[k++] = q[j++];
+    //将temp的内容复制到q中
+    for(int i=l, k=0; i<=r; i++, k++){
+        q[i] = temp[k];
+    }
+}
+```

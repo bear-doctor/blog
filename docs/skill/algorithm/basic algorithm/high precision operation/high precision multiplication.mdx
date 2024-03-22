@@ -1,0 +1,69 @@
+---
+title: 高精度乘法
+sidebar_label: 高精度乘法
+sidebar_position: 3
+---
+
+## 定义
+
+高精度乘法也就是两个数相乘，这里是一个长度很大的数乘以一个长度相对而言很小的数，两个数都是非负数，由于**不排除一个数为零的可能性，因此需要去掉前导零。**
+
+
+## 实现
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/description/795/)
+
+</p>
+</details>
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+
+//乘法
+vector<int> mul(vector<int> &A, int B)
+{
+    vector<int> result;
+    int t = 0;//初次进位
+    for(int i = 0; i < (int)A.size(); i++)
+    {
+        t = A[i] * B + t;
+        result.push_back(t % 10);
+        t = t / 10;
+    }
+    //最后的进位
+    while(t)
+    {
+        result.push_back(t % 10);
+        t = t / 10;
+    }
+    
+    //去掉前导零，因为如果存在B为零，则会产生多个零
+    while(result.size() > 1 && result.back() == 0) result.pop_back();
+    
+    return result;
+}
+
+int main()
+{
+    string A;
+    cin >> A;
+    vector<int> num1;
+    for(int i = A.size()-1; i >= 0; i--) num1.push_back(A[i] - '0');
+    
+    int num2;
+    cin >> num2;
+    
+    vector<int> result;
+    result = mul(num1, num2);
+    
+    for(int i = result.size()-1; i >= 0; i--) printf("%d", result[i]);
+    
+    return 0;
+}
+```

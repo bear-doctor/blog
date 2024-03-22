@@ -1,0 +1,256 @@
+---
+slug: process of build docusaurus
+title: 网站搭建过程
+description: 用docusaurus搭建网站
+authors: bear
+date: 2023-07-13T08:00
+tags: [website]
+hide_table_of_contents: false
+---
+import TOCInline from '@theme/TOCInline';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+在我自学的过程中发现，学了一些内容却不做笔记以及日常不应用的情况下，学过的内容很快就会遗忘，因此我开始做我自己的博客，用于记录我日常学习的笔记和一些疑难问题。这里我使用docusaurus来搭建我自己的博客，这里还使用了“愧怍”大佬的主题。相关链接如下：
+- [docusaurus官方网站](https://docusaurus.io/zh-CN/)
+- [docusaurus主题](https://github.com/kuizuo/blog)
+
+{/* truncate */}
+
+## 一、整体布局
+### 1.1. 导航栏navbar布局
+仅修改 <u>docusaurus.config.mts</u> 中 <u>themeConfig</u> 的 <u>navbar</u> 选项内容即可。配置可以查看[官方文档](https://docusaurus.io/docs/api/themes/configuration#navbar)。
+
+### 1.2. 底部footer布局
+仅修改 <u>docusaurus.config.mts</u> 中 <u>themeConfig</u>的 <u>footer</u> 选项内容即可。只是要注意，每一个item都需要有 `label` 和 `to` 或 `href` 属性。详情可查看[官方文档](https://docusaurus.io/docs/api/themes/configuration#footer-links)。
+
+{/* ### 3. 首页界面
+修改`src/pages/index.js`和`src/components/HomepageFeatures/index.js`的内容即可。 */}
+
+
+
+## 二、博客搭建
+### 2.1. 生成博客
+只要在blog目录下新建`.md`或`.mdx`文件即可，这里我创建的文档是 `.mdx` 后缀的，因为这可以使用 `.md` 文件的语法，也可以在文档中加入React组件。但 docusaurus v3 依赖的 mdx v3.0 版本对于语法的约束更加严格了，可能会出现一些无法 resolve 的依赖问题，可以参考：
+- [mdx 常见问题](https://docusaurus.io/zh-CN/docs/migration/v3#common-mdx-problems)
+
+
+### 2.2. 博客列表
+博客的首页是博客列表页面，默认情况下，博客列表中的每一篇博客的全部内容都会显示出来。我们可以用`{/* truncate */}`来隐藏一些内容。在`{/* truncate */}`下的内容会在博客列表中隐藏，转为显示“阅读更多”。
+
+```
+---
+title: MDX blog truncation Example
+---
+
+All these will be part of the blog post summary.
+
+// highlight-next-line
+{/* truncate */}
+
+But anything from here on down will not be.
+```
+
+我们还可以控制博客列表显示多少篇博客的内容，还有一些别的操作，可以参考：
+- [博客list](https://docusaurus.io/zh-CN/docs/blog)
+- [博客插件](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-blog)
+
+### 2.3. 博客作者部分
+docusaurus中有内联作者和全局作者两种表示方法。
+
+**（1）内联作者** 
+
+内联作者是根据 markdown 文档上的 [front matter](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-blog#markdown-front-matter) 来生成。
+```yml
+---
+authors:
+  - name: BearProfessor
+    url: https://github.com/bear-doctor?tab=repositories
+    image_url: https://upload.cc/i1/2023/07/14/ni9LyD.png
+    email: bear_professor@outlook.com
+---
+```
+> 如果想要得到图片的 URL 地址，就需要用到图床，我是将图片存储在腾讯云的对象存储中。
+
+**（2）全局作者**
+
+其实就是把上面的front matter放入一个专门的文件中，需要的时候在front matter中调用即可
+```yml title="authors.yml"
+bear:
+  name: 小熊博士
+  title: 转码ing
+  url: https://github.com/bear-doctor
+  image_url: /img/logo.webp
+```
+```yml title="doc.mdx"
+---
+author: bear
+---
+```
+
+### 2.4. 博客日期
+用`date`属性即可，[**详情**](https://docusaurus.io/zh-CN/docs/blog#blog-post-date)
+
+```yml
+---
+date: 2023-07-14T18:00
+---
+```
+
+### 2.5. 博客侧边栏
+在 <u>docusaurus.config.mts</u> 中的 preset 选项中可以设置相应的博客侧边栏，可查看[官方文档](https://docusaurus.io/zh-CN/docs/blog#blog-sidebar)。然而，官方文档中也提及——我们可以使用博客插件来设置博客侧边栏，在我们网站的主题中也是这么设置的。
+
+### 2.6. 博客插件
+我们的网站主题里面对博客插件进行了一定的配置，可以在[官方博客插件文档](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-blog#configuration)中查看每一个键值对的具体含义和一些其他的配置选项。
+
+```js title="docusaurus.config.mts"
+const config: Config = {
+  plugins: [
+    // 把插件名称和配置对象放在一个二元组中，可以对这个插件进行配置。
+    [
+      './src/plugin/plugin-content-blog', // 为了实现全局 blog 数据，必须改写 plugin-content-blog 插件
+      {
+        path: 'blog', // 博客内容目录的文件系统路径，相对于站点目录
+        // 直接编辑博客文件，完全忽略这个变量就会禁用编辑链接。
+        // editUrl: ({ locale, blogDirPath, blogPath, permalink }) =>
+        //   `https://github.com/kuizuo/blog/edit/main/${blogDirPath}/${blogPath}`,
+        editLocalizedFiles: false,
+        blogDescription: '学习即是生活',  // 用于增进 SEO 的博客页面元描述。
+        blogSidebarCount: 12,
+        blogSidebarTitle: 'Blogs',  // 博客侧边栏标题
+        postsPerPage: 12,
+        showReadingTime: true,
+        readingTime: ({ content, frontMatter, defaultReadingTime }) =>
+          defaultReadingTime({ content, options: { wordsPerMinute: 300 } }),
+        // 博客订阅源
+        // feedOptions: {
+        //   type: 'all',
+        //   title: '小熊博士',
+        //   copyright: `Copyright © ${new Date().getFullYear()} 小熊博士 Built with Docusaurus.<p><a href="http://beian.miit.gov.cn/" class="footer_lin">${beian}</a></p>`,
+        // },
+      },
+    ],
+  ]
+  ......
+}
+```
+
+## 三、文档
+### 3.1 文档属性
+#### 3.1.1 front matter
+文件的前言是用于给doc页面提供额外的元数据。示例：
+```
+---
+id: doc-markdown
+title: Docs Markdown Features
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Markdown
+sidebar_position: 3
+pagination_label: Markdown features
+custom_edit_url: https://github.com/facebook/docusaurus/edit/main/docs/api-doc-markdown.md
+description: How do I find you when I cannot solve this problem
+keywords:
+  - docs
+  - docusaurus
+image: https://i.imgur.com/mErPwqL.png
+slug: /myDoc
+last_update:
+  date: 1/1/2000
+  author: custom author name
+---
+```
+若要了解front matter有什么属性，对应什么值，有什么作用，参考[官方文档](https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter)
+
+#### 3.1.2 文档结构
+这里的文档结构并不是说在本地文件夹中的文档结构，而是**指网站中的文档结构**。这里主要涉及到两个属性：id 和 slug
+1. 当手写侧边栏，或这使用与文档相关的布局或钩子时，ID 会被用来指代某篇文档。
+2. 使用 slug 前言可以更改文档的 URL。
+
+从上面两个关于这两个前言的描述来看，可以更加明确地体会到，这是配置博客网站的文件结构。当然，查看[官方文档](https://docusaurus.io/zh-CN/docs/create-doc#organizing-folder-structure)可以发现：这两个前言属性的默认值是根据文件的本地结构来生成的。
+
+### 3.2 侧边栏
+#### 3.2.1 侧边栏的具体类型
+1. [doc（有简写方式）](https://docusaurus.io/docs/sidebar/items#sidebar-item-doc)
+2. link
+3. html
+4. [category（生成items的dropdown）](https://docusaurus.io/docs/sidebar/items#sidebar-item-category)
+#### 3.2.2 指定侧边栏的文档或者目录顺序
+侧边栏采用的自动生成Autogenerated，默认是按照字母的顺序来排列的，可以指定目录的顺序，文档的顺序。[**详情**](https://docusaurus.io/zh-CN/docs/sidebar/autogenerated#autogenerated-sidebar-metadata)
+#### 3.2.3 自定义侧边栏
+1. 我的网站中，`navbar`中的 “知识大门” 和 “算法” 其实都是在docs文件夹中，但是点击这两个内容会出现不同的侧边栏，这就需要在`sidebar.js`文件中自定义侧边栏（可以定义侧边栏包含什么内容）。这里的例子可以去看 [**官方文档**](https://docusaurus.io/zh-CN/docs/sidebar/autogenerated)  中的开头的例子。 
+2. 文档的侧边栏标签可以通过修改 front matter 中的`sidebar_label`来实现，目录的侧边栏可以通过在目录中添加一个`_category_.yml`来实现，还可以实现category link功能（这个功能也可以在sidebar.js中指定）
+#### 3.2.4 侧边栏隐藏
+在docusaurus.config.js中进行了修改。[**具体代码**](https://docusaurus.io/docs/sidebar#hideable-sidebar)
+#### [3.2.5 autogenerated](https://docusaurus.io/docs/sidebar/autogenerated)
+1. 使用`type:autogenerated`可以自动生成侧边栏，每一个文件夹会生成一个`category`类型的侧边栏，每一个文件会生成一个`doc`类型的侧边栏。
+2. autogenerated产生的侧边栏，无法在sidebar.js文件中自定义侧边栏的label，对于file而言，可以在front matter中声明`sidebar_label`，对于category而言，可以在目录中添加`_category_.yml`文件，在这个文件中进行声明
+3. 对于其他类型的侧边栏，都是从`sidebar.js`中读取侧边栏信息，而对于`autogenerated`类型的侧边栏，则是从文件中读取信息，从file中读取front matter，从文件夹中读取`_category_.yml`或是`_category_.json`的信息。[**官方文档**](https://docusaurus.io/docs/sidebar/autogenerated#autogenerated-sidebar-metadata)
+#### 3.2.6 侧边栏实例
+官网的侧边栏sidebar.js的文档，可以结合官方的网站来看。[**文档**](https://docusaurus.io/docs/sidebar#complex-sidebars-example)
+#### 3.2.7 [使用多个侧边栏](https://docusaurus.io/docs/sidebar/multiple-sidebars)
+可以给不同的文件夹设置不同的侧边栏，我的网站中“知识大门”和“算法”两个都是在docs文件夹下的内容，但我设置了两个侧边栏，官网中navbar中的Docs和Apis也是一样的情况
+
+
+### 3.2. 隐藏文件
+只要将文件命名为带有_前缀的文件，就不会被Docusaurus显示出来
+
+## 四、Markdown特性
+### 4.1. MDX和React
+官网文档讲述了如何引入插件，有内联，导入，全局三种方式，还讲了导入Markdown文档，代码片段。[**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/react)
+
+### 4.2. 选项卡
+官网文档讲述了选项卡如何导入，自定义选项卡。[**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/tabs)
+<Tabs>
+  <TabItem value="apple" label="Apple" default>
+    This is an apple 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    This is an orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    This is a banana 🍌
+  </TabItem>
+</Tabs>
+
+### 4.3. 代码块
+1. 代码块的题目  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#code-title)
+2. 代码块的语法高亮  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#syntax-highlighting)
+3. 代码块的行高亮  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#line-highlighting)
+4. 代码块的行数  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#line-numbering)
+5. 可交互的代码块  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#interactive-code-editor)
+6. 多语言代码块（例子：多个tab用不同的语言）  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#multi-language-support-code-blocks)
+
+### 4.4. 告示
+```yml
+:::note 告示
+
+这是我第一次搭建网站
+
+:::
+
+//:::后面还可以跟tip, info, caution, danger这四种，对应了不同的样式
+
+```
+:::note 告示
+
+这是我第一次搭建网站
+
+:::
+
+1. 告示注意事项  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#usage-with-prettier)
+2. 告示自定义题目  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#specifying-title)
+3. 告示里面可以用MDX  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#admonitions-with-mdx)
+4. 告示可以用别的方法，如用JSX来实现  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#usage-in-jsx)
+5. 告示可以自定义样式  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#customizing-admonitions)
+
+### 4.5. 标题和目录
+标题就用markdown的标准语法即可，而目录有自动生成的方法。[**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/toc#inline-table-of-contents)
+
+### 4.6. 资源
+图片、文件、内嵌图片
+
+### 4.7. 其他
+后续内容用到了再补充
+
+

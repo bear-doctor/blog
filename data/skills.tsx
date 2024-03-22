@@ -1,5 +1,6 @@
 import { IconProps } from '@iconify/react'
 
+// 这是首页的技能图标的显示位置
 const SKILLS: IconProps[] = [
   {
     icon: 'logos:vue',

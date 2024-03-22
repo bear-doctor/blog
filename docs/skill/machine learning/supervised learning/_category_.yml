@@ -1,0 +1,11 @@
+# position: 2.5 # float position is supported
+label: '监督学习'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: doc
+  id: 'machine learning/supervised learning/overview'
+  # description: 

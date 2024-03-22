@@ -17,7 +17,7 @@ const TITLE = translate({
 })
 const DESCRIPTION = translate({
   id: 'theme.project.description',
-  message: '学而无用，不如学而用之。这里是我在技术领域中努力实践和应用的最佳证明。',
+  message: '学而用之，方能检验自我',
 })
 
 // const GITHUB_URL = 'https://github.com/kuizuo'

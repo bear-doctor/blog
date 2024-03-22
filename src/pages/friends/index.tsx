@@ -10,12 +10,11 @@ import { motion } from 'framer-motion'
 
 const TITLE = '友链'
 const DESCRIPTION = '有很多良友，胜于有很多财富。'
-const ADD_FRIEND_URL = 'https://github.com/kuizuo/blog/edit/main/data/friends.tsx'
+const ADD_FRIEND_URL = 'https://github.com/bear-doctor/blog/blob/main/data/friends.tsx'
 const SITE_INFO = `
-title: '愧怍'
-description: '道阻且长，行则将至'
+title: '小熊博士'
+description: '唯热爱与美食不可辜负'
 website: 'https://kuizuo.cn'
-avatar: 'https://kuizuo.cn/img/logo.png'
 `
 
 function SiteInfo() {
@@ -34,7 +33,7 @@ function FriendHeader() {
       <h1>{TITLE}</h1>
       <p>{DESCRIPTION}</p>
       <a className="button button--primary" href={ADD_FRIEND_URL} target="_blank" rel="noreferrer">
-        🔗 申请友链
+        🥰 交个朋友
       </a>
     </section>
   )

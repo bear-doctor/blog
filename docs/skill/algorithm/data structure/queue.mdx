@@ -1,0 +1,57 @@
+---
+sidebar-label: 队列
+title: 队列
+sidebar-position: 3
+---
+
+## 定义
+从逻辑上来看，队列也是一个线性表，数据直接呈一对一的关系。队列实际上也是一个***操作受限的线性表***，只允许从队尾插入元素（称为入队），只允许从队头删除元素（称为出队）。
+
+## 代码实现
+```cpp
+#include<iostream>
+using namespace std;
+
+const int N = 100010;
+
+// 这里写的队列并不是循环队列
+class queue {
+public:
+    queue() {
+        top = 0;
+        bottom = 0;
+        count = 0;
+    }
+    // 判空
+    bool isEmpty() {
+        return count == 0;
+    }
+    // 判满
+    bool isFull() {
+        return count == N;
+    }
+    // 队尾插入一个数
+    bool pushTail(int x) {
+        if(isFull()) return false;
+        data[bottom++] = x;
+        count++;
+        return true;
+    }
+    // 队头删除一个数
+    bool popHead() {
+        if(isEmpty()) return false;
+        top++;
+        count--;
+        return true;
+    }
+    // 查询队头元素
+    int getTop() {
+        return data[top];
+    }
+private: 
+    int data[N];
+    int top;
+    int bottom;
+    int count;
+};
+```

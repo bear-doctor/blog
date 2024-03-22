@@ -1,22 +1,30 @@
-:root {
-  --ifm-color-primary: #12affa;
-  --ifm-color-primary-dark: #05a1ec;
-  --ifm-color-primary-darker: #0598df;
-  --ifm-color-primary-darkest: #047eb8;
-  --ifm-color-primary-light: #2cb8fb;
-  --ifm-color-primary-lighter: #b0e6ff;
-  --ifm-color-primary-lightest: #d5f1fd;
-  --ifm-code-font-size: 95%;
-  --ifm-font-family-base: misans, ui-sans-serif, system-ui, -apple-system;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|PT+Sans+Narrow');
+// @import 'lxgw-wenkai-screen-webfont/style.css';
 
-  --ifm-heading-font-family: ui-sans-serif, system-ui, -apple-system;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=Roboto&display=swap');
+
+:root {
+  --ifm-color-primary: #f76222;
+  --ifm-color-primary-dark: #f45009;
+  --ifm-color-primary-darker: #e74b08;
+  --ifm-color-primary-darkest: #be3e07;
+  --ifm-color-primary-light: #f8753d;
+  --ifm-color-primary-lighter: #f87f4b;
+  --ifm-color-primary-lightest: #fa9c73;
+  --ifm-code-font-size: 95%;
+  --ifm-font-family-base: 'Inter', ui-sans-serif, system-ui, -apple-system,
+  'Segoe UI', 'Helvetica Neue', 'Noto Sans', sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', consolas,
+  sfmono-regular, menlo, monaco, 'Liberation Mono', monospace;
+
+  --ifm-heading-font-family: var(var(--ifm-font-family-base))
 
   --ifm-navbar-shadow: 0 4px 28px rgb(0 0 0 / 10%);
 
   --ifm-menu-color: #0d203a;
 
   /* 代码块背景 */
-  --ifm-code-background: #12affa1a;
+  --ifm-code-background: #fa6f121a;
   --ifm-code-color: var(--ifm-color-primary);
   --prism-background-color: #f6f8fa;
 
@@ -35,8 +43,8 @@
   --ifm-container-width: 1024px;
 
   --ifm-heading-color: hsl(214deg 78% 17%);
-  --ifm-heading-font-weight: 500;
-  --ifm-font-weight-bold: 520;
+  --ifm-heading-font-weight: 600;
+  --ifm-font-weight-bold: 600;
   --ifm-toc-border-color: #f1f5f9;
 
   --content-background-color: #f8fafc;
@@ -73,11 +81,11 @@ html[data-theme='dark'] {
 
 body {
   font-family:
-    misans,
-    system-ui,
-    -apple-system,
-    'PingFang SC',
-    'Microsoft YaHei';
+  'Inter', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', 'Helvetica Neue', 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', consolas,
+    sfmono-regular, menlo, monaco, 'Liberation Mono', monospace;
+  font-size: 1.05em;
 }
 
 html,
@@ -91,6 +99,37 @@ body {
 
 html[data-theme='dark'] .theme-code-block {
   --prism-background-color: #1e1e1e !important;
+}
+
+/* 侧边栏左侧线条 */
+.menu__list .menu__list {
+  border-bottom: 2px solid #e3cece;
+  border-bottom-color: #ffffff00!important;
+  border-left: 2px solid #ffd0b5;
+  border-radius: 0 0 0 10px;
+  margin-left: 1rem;
+  padding-left: 0.3rem;
+}
+
+html[data-theme='dark'] .menu__list .menu__list{
+  border-bottom: 2px solid #615e5e;
+  border-left: 2px solid #615e5e;
+}
+
+/* 引用块 */
+blockquote {
+  border-left-color: var(--ifm-color-primary);
+  background-color: #fcf8f4;
+  border-left: 0.3rem solid var(--ifm-color-primary);
+  border-radius: 0.3rem;
+  // color: #6a737d;
+  font-size: 90%;
+  margin: 1rem 0 1rem;
+  padding: 0.5rem 1rem;
+}
+
+html[data-theme='dark'] blockquote{
+  background-color: #2e303d;
 }
 
 article {
@@ -124,15 +163,20 @@ article {
     }
 
     > h2 {
-      font-size: 1.8em;
+      font-size: 2em;
+      padding-left: .5rem;
+      border-bottom: 2px solid #f37610;
+      border-left: .6rem solid #f37610;
     }
 
     > h3 {
-      font-size: 1.5em;
+      padding-left: .5rem;
+      font-size: 1.7em;
+      border-left: .4rem solid #f37610;
     }
 
     > h4 {
-      font-size: 1.2em;
+      font-size: 1.4em;
     }
 
     .markdown-body a:hover::before {
@@ -142,7 +186,7 @@ article {
     .a-icon {
       display: none;
     }
-
+    
     p > span {
       > .a-icon {
         display: block;
@@ -159,13 +203,14 @@ article {
   color: #fff;
 }
 
+/* navbar */
 .navbar {
-  box-shadow: none;
-  background-color: transparent;
-
-  // background-image: radial-gradient(transparent 1px, #fff 1px);
-  // background-size: 3px 3px;
-  // backdrop-filter: saturate(50%) blur(4px);
+  box-shadow: 0 0 0.2rem #0000001a, 0 0.2rem 0.4rem #0003;
+  
+  // 毛玻璃效果
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  opacity: 1;
 
   .navbar__title {
     margin-left: 12px;
@@ -224,8 +269,10 @@ article {
     width: 9rem;
   }
 
+  // 导航栏的图标点击时出现的侧边栏
   .navbar-sidebar {
     display: block;
+    height: 100vh;
   }
 }
 

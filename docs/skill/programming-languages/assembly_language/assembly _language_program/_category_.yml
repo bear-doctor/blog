@@ -1,0 +1,11 @@
+position: 4 # float position is supported
+label: '汇编程序编写'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 汇编程序编写
+  # description: 

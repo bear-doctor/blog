@@ -1,0 +1,47 @@
+---
+title: LaTeX源文件的基本结构
+sidebar-label: 文件基本结构
+---
+
+## 文件基本结构
+LaTeX文件主要分为两个部分，导言区和正文区
+1. 导言区主要用于声明全局的内容
+2. 正文区主要用于写文稿
+```latex
+% 导言区
+% 引入文档类，不同文档类有不同的结构，有article, book, letter, report
+\documentclass{article}
+
+% 使用包
+\usepackage{ctex}
+
+% 描述标题等内容
+\title{题目}
+\author{LiHua}
+\date{\today}
+
+% 正文区
+% \begin{环境}......\end{环境}用于包含环境，document环境在正文区中只能出现一次
+\begin{document}
+    \maketitle  % 使标题内容显示出来
+    内容
+\end{document}
+```
+
+## 显示数学公式
+1. 若想显示数学公式，需要用`$`包含起来
+```latex
+% 显示行内公式
+$f(x) = 3*x^2 + 2$
+
+% 公式单独呈现一行
+$$ f(x) = 3*x^2 + 2 $$
+```
+
+2. 显示带有序号的公式
+```latex
+\begin{equation}
+    f(x) = 3 + x
+\end{equation}
+```
+> 注意，若是想要两个带序号的公式，需要写两次这个结构

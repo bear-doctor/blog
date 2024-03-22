@@ -1,0 +1,110 @@
+---
+title: 高精度减法
+sidebar_label: 高精度减法
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+
+## 定义
+
+高精度减法是指长度很大的值相减，这里写的是两个长度很大的值相减。这里要注意的是，相减结果可能会产生**前导零**，这是需要去掉的。
+
+## 实现
+
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/description/794/)
+
+</p>
+</details>
+
+<Tabs>
+<TabItem value="主函数" label="主函数" default>
+
+```cpp
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+int main()
+{
+    //输入两个数
+    string A, B;
+    cin >> A >> B;
+    //倒序存储两个数
+    vector<int> num1, num2;
+    for(int i = A.size() - 1; i >= 0; i--) num1.push_back(A[i] - '0');
+    for(int i = B.size() - 1; i >= 0; i--) num2.push_back(B[i] - '0');
+    
+    //比较两个数大小，若是a<b，就先输出负号，然后大减小
+    vector<int> result;
+    if(cmp(num1, num2)) result = sub(num1, num2);
+    else
+    {
+        result = sub(num2, num1);
+        printf("-");
+    }
+    
+    //输出结果
+    for(int i = result.size() - 1; i >= 0; i--)
+    {
+        printf("%d", result[i]);
+    }
+    
+    return 0;
+}
+```
+</TabItem>
+<TabItem value="比较大小" label="比较大小">
+
+```cpp
+//比较两个数的大小
+bool cmp(vector<int> &num1, vector<int> &num2)
+{
+    if(num1.size() > num2.size()) return true;
+    else if(num1.size() < num2.size()) return false;
+    else
+    {
+        int i = num1.size() - 1, j = num2.size() - 1;
+        while(i >= 0 && num1[i] == num2[j]) i--, j--;
+        //若是等于，也返回真
+        return num1[i] >= num2[j];
+    }
+}
+```
+</TabItem>
+<TabItem value="两数相减" label="两数相减">
+
+```cpp
+//相减，这里经过比较，已经确定num1大于num2
+vector<int> sub(vector<int> &num1, vector<int> &num2)
+{
+    vector<int> result;
+    //设定初始借位为0
+    int t = 0;
+    for(int i = 0; i < (int)num1.size(); i++)
+    {
+        //highlight-start
+        t = num1[i] - t;
+        if(i < (int)num2.size()) t = t - num2[i];
+        result.push_back((t + 10) % 10);
+        if(t < 0) t = 1;
+        else t = 0;
+        //highlight-end
+    }
+    
+    //highlight-start
+    //筛掉前导零
+    while(result.size() > 1 && result.back() == 0) result.pop_back();
+    return result;
+    //highlight-end
+}
+```
+</TabItem>
+</Tabs>

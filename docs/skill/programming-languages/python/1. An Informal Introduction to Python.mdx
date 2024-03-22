@@ -1,0 +1,241 @@
+---
+title: Python速览
+sidebar_label: 关于Python的简单介绍
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::tip Python中的数据类型
+
+int 整数
+float 小数
+complex 复数
+str 字符串
+list 列表
+tuple 元组
+bool 布尔
+dict 字典
+set 集合
+
+:::
+
+## 一、数字
+1. 加减乘除，除之后向下取整，取余，乘方
+> 两个数相除，所得是浮点数
+2. 小数与整数相互转换
+```python
+a = 13
+b = 13.9
+c = int(b)  # 去尾取整
+d = float(a)
+print(c)  # 13
+print(d)  # 13.0
+```
+
+## 二、字符串
+1. 单引号，双引号包裹字符串字面量
+> 单引号和双引号没有区别
+2. \ 表示转义字符，r表示不使用转义
+3. print() 输出字符串
+> 正常的字符串是不会将转义字符转成对应的含义的，print()会
+4. """ 和 ''' 表示多行字符
+5. 字符串的拼接，重复
+6. 字符串的索引
+7. 字符串的切片
+```python
+a = '12345678'
+print(a[1: 7])  # 234567
+print(a[1: 7: 2])  # 246
+print(a[7: 1: -2])  # 864
+```
+8. 字符串的修改
+> 字符串是不可修改的，若想修改，需要通过索引，切片和拼接得到新字符串
+9. 字符串长度（len()内置函数）
+10. 判断子串
+```python 
+a = 'hello world'
+b = 'Python'
+print("el" in a) #true
+print("y" not in b) #false
+```
+11. 数字和字符串的互相转换
+<Tabs>
+  <TabItem value="字符串转为数字" label="字符串转为数字" default>
+    
+    ```python
+    a = '1234'
+    b = '12.34'
+    c = int(a)  # 字符串转成整数
+    d = float(b)  # 字符串转成浮点数
+    print(c + d)  # 1246.34
+    ```
+    
+  </TabItem>
+  <TabItem value="数字转换成字符串" label="数字转换成字符串">
+
+  ```python
+    a = 1234
+    b = 12.34
+    c = str(a)
+    d = str(b)  
+    print(c + d)  # 123412.34
+  ```
+
+  </TabItem>
+    <TabItem value="将字符串当作表达式" label="将字符串当作表达式">
+
+  ```python
+    a = '14 + 15'
+    b = 19
+    c = 'b * 2'
+    print(a)  # 14 + 15
+    print(eval(a))  # 29
+    print(eval(c))  # 38
+  ```
+
+  </TabItem>
+</Tabs>
+12. 字符串的分割
++ 以一个分隔符来分割
+```python title='用字符串中的split(seperatment)'
+say = "tomorrow,,is,better,than,,yesterday"
+s = say.split(',')
+print(s)
+# ['tomorrow', '', 'is', 'better', 'than', '', 'yesterday']
+# 相邻分割符分割之后会得到一个空串
+```
+
++ 以多个分隔符来分割
+```python
+# 需要导入re模块，以正则表达式来分割
+import re
+say = "tomorrow, is,better than*yesterday"
+s = re.split(",| |\*", say)
+print(s)
+#['tomorrow', '', 'is', 'better', 'than', 'yesterday']
+```
+13. 字符串函数
++ `str.count("substr")`  求子串出现的次数
++ `len(str)`  求字符串长度
++ `str.upper(), str.lower()`  转大写，转小写
++ `str.find(substr, [strat]), str.rfind(substr, [strat])` 查找第一个出现的子串的位置，没找到则返回-1，start指定起点
++ `str.index(substr, [start]), str.rindex(substr, [start])` 和find一样的功能，不同的是查找失败会引发异常
++ `str.replace(old, new)` 把str中所有old子串换成new子串
++ `str.isdigit(), str.isupper(), str.islower()` 判断字符串是否全是数，大写，小写
++ `str.stratswith('substr'), str.endwith('substr')` 判断字符串是否以某子串开头，结尾
++ `str.strip([substr]), str.lstrip([substr]), str.rstrip([substr])` 返回头尾去除某一字符之后的字符串，lstrip是去除头部，rstrip是去除尾部
+
+14. 字符串编码
+
+15. [**字符串格式化**](https://docs.python.org/zh-cn/3/tutorial/inputoutput.html#the-string-format-method)
+1. 用format方法，`str.format(arguments)`
+2. 用格式化字符串字面值
+
+
+## 三、列表
+1. 字面量，用方括号包起来
+2. 索引和切片
+3. 合并
+4. 改变内容（可以通过索引，和切片来改变）
+5. list自己的方法：append()在结尾添加新元素
+6. 内置函数 len()
+7. 列表嵌套
+8. 用in来判断列表中是否包含某个元素
+7. 字符串分割成列表
+```python
+x = '1\n2\t3 4'
+new_x = x.split()  # 分割字符串，\n，\t，空格都会被视作分割的标志，返回的是以字符串为元素的列表
+total = 0
+for item in new_x:
+    print('item:', item)
+    total += int(item)
+print('total:', total)
+
+# item: 1
+# item: 2
+# item: 3
+# item: 4
+# total: 10
+```
+
+## 四、输入输出语句
+### 1. 输出语句
+```python
+print('hello world')
+print('hello world', end='')  # 修改末尾输出，默认的末尾输出为换行符
+print('hello', 'world')  # 输出多个参数，中间默认以空格隔开
+```
+### 2. 输入语句
+```python
+x = input('type your code')
+# input 接受字符串参数，并将其放入标准输出中，不包括换行符
+# 输入的内容会在敲下回车的时候转换为字符串返回
+# 每次输入一行，如果要输入三行，就要写三次input
+```
+
+## 五、比较运算
+1. Python中的比较运算可以连续比较
+```python
+print(4 < 6 < 8) # True
+print(4 < 6 > 2) # True
+```
+2. Python中 1==True， 0==Flase，其他的都只是相当于True或False，并不相等
+```python
+print(1 == True)  # True
+print(0 == False)  # True
+print(2 == True)  # False
+print([] == False)  #  False
+print(not [])  # True
+```
+3. 运算符优先级
++ 总体上而言，算术 > 关系 > 逻辑
++ 逻辑：not > and > or
+
+## 6. 变量的指针本质(MOOC)
+1. 在Python中，任何一个可以赋值的东西都是一个指针
+```python
+a = 3  # a -> 3
+b = a  # 将b的指向设为和a一样
+a == b  # 判断a与b所指向的内容是否一致
+a is b  # 判断a与b的指向是否相同
+
+##########################################
+
+a = ['hello', 'world']
+b = a
+a[1] = 'Mike'
+print(a)  # hello Mike
+print(b)  # hello Mike
+```
+2. 组合数据类型中的每一个元素也是一个指针
+```python
+l = [2, [1, 3], 'hello']
+s = (2, [1, 3], 'hello')
+```
+上面的列表中，要把每一个元素认为是一个指针，指向了空间中某一块内存
+3. is 和 == 的区别
+`a is b` 指的是 a 与 b 的指向是一样的，而 a == b 指的是 a 与 b 所指向的内容是相同的。
+
+对于可变类型，a == b 与 a is b 要严格区分开来，因为若 a 与 b 指向相同，修改了 a 的内容，也会导致 b 的内容被修改，而对于不可变类型而言，不需要区分这两者，因为即使 a 与 b 指向相同，在修改 a 之后，并不会出现 b 也被修改了的情况，因为实际上是 a 改变了指向，不会出现可变类型的问题。
+
+4. 函数传参
+函数传参的时候，函数形参和实参实际上是指向同一个位置的。如果指向的是不可变类型，那么形参发生改变，改变的实际上是形参的指向，不会影响实参。但如果指向的是可变类型，则相反
+```python
+# 要注意，这里面的赋值其实都是修改指针
+def swap(a, b):
+    temp = a
+    a = b
+    b = temp
+    print(a, b)  # 2 1
+
+a = 1
+b = 2
+swap(a, b)
+print(a, b)  # 1 2
+```
+
+## Python编码
+1. 数据在内存中用的是unicode编码，在文件中用的是utf-8或者gbk编码
+2. 得到一个数据的编码`ord(x)`
+3. 根据编码得到对应内容`chr(x)`

@@ -1,0 +1,65 @@
+---
+title: 错误和异常
+sidebar_label: 错误和异常
+---
+
+### [八、错误和异常](https://docs.python.org/zh-cn/3/tutorial/errors.html#)
+#### 8.1 句法错误
+#### 8.2 异常
+异常分为两种
++ 内置异常
++ 用户自定义异常
+#### [8.3 异常的处理](https://docs.python.org/zh-cn/3/tutorial/errors.html#handling-exceptions)
+1. 异常的处理就是利用`try... except...`语句来实现的
+```python 
+while True:
+    try:
+        x = int(input("Please enter a number: "))
+        break
+    except ValueError:
+        print("Oops!  That was no valid number.  Try again...")
+```
+2. `except`语句可以用元组来指定多个异常
+3. `except`语句异常匹配可以匹配到自身或其基类，不能与派生类匹配
+4. **`except`语句发生的时候，会自动生成一个对应的异常实例，可以用`as`重命名**
+5. **`except`语句发生的时候，会有相应的值，这些值与异常类型相关。用type()函数和.args参数可以看**
+6. `Exception`类是`BaseException`的子类，也是很多具体内置异常的基类，不是`Exception`的派生类的异常往往是不可处理的，它们的出现说明程序就应该终止了。
+7. `try...except`语句具有可选的`else`子句，该子句如果存在，它必须放在**所有 except 子句之后**。 它适用于try子句**没有引发异常但又必须要执行**的代码。
+
+#### [8.4 触发异常](https://docs.python.org/zh-cn/3/tutorial/errors.html#raising-exceptions)
+1. 用`raise exception`可以主动触发异常
+2. 传给`raise`的异常可以是异常实例，也可以是异常类，若传递的是异常类，会自动调用异常类的构造函数隐式地生成异常实例
+
+#### [8.5 异常链](https://docs.python.org/zh-cn/3/tutorial/errors.html#exception-chaining)
+
+#### [8.6 用户自定义异常]
+1. 用户自定义的异常应该也是`Exception`的派生类
+2. 异常类可以和其他类一样定义很复杂的内容，但通常应该保持简单
+3. 大多数异常命名都以 “Error” 结尾，类似标准异常的命名
+
+#### [8.7 定义清理操作](https://docs.python.org/zh-cn/3/tutorial/errors.html#defining-clean-up-actions)
+1. `try`还有一个子句`finally`，用于定义在所有情况下都必须要执行的清理操作。
+2. 不论 try 语句是否触发异常，都会执行 finally 子句，有[**几种较为复杂的触发异常情况**](https://docs.python.org/zh-cn/3/tutorial/errors.html#defining-clean-up-actions)
+3. 在实际应用程序中，finally 子句对于释放外部资源（例如文件或者网络连接）非常有用，无论是否成功使用资源。
+
+#### 8.8 预定义的清理操作
+1. 某些对象定义了不需要该对象时要执行的标准清理操作。无论使用该对象的操作是否成功，都会执行清理操作。这种已经定义好的清理操作就是预定义的清理操作。例如文件对象，可以用with语句
+
+#### [8.9 提出和处理多个无关的异常](https://docs.python.org/zh-cn/3/tutorial/errors.html#raising-and-handling-multiple-unrelated-exceptions)
+1. 应用场景是：多个任务并行失败，产生多个异常
+2. 可以用内置的`ExceptionGroup`来包含一个异常的列表，`ExceptionGroup`本身也是一个异常类，可以用异常信息和异常列表来初始化实例
+```python
+excs = [OSError('error 1'), SystemError('error 2')]
+raise ExceptionGroup('there were problems', excs)
+```
+3. `ExceptionGroup`的异常列表中可以包含`ExceptionGroup`实例，这样就实现了异常的嵌套
+
+#### [8.9 丰富异常的文本信息](https://docs.python.org/zh-cn/3/tutorial/errors.html#enriching-exceptions-with-notes)
+一个异常初始化的时候往往会伴随着一些信息，如果后面想要添加信息，可以用`add_note(note)`方法来实现。
+```python
+try:
+    raise TypeError("bad type")
+except Exception as e:
+    e.add_note("Add some information")
+    raise
+```

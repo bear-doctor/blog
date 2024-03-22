@@ -1,0 +1,183 @@
+---
+title: 类
+sidebar_label: 类
+---
+
+## 八、类
+### [8.1 命名空间和作用域](https://docs.python.org/zh-cn/3/tutorial/classes.html#python-scopes-and-namespaces)  
+#### 8.1.1 命名空间
+1. 概念：是映射到对象的名称
+2. 常见的命名空间
+    + 内置函数集合
+    + 模块中的全局名称
+    + 函数调用中的局部名称
+    + 对象的属性
+3. 访问命名空间内的名称可以用"."
+4. 命名空间是在不同时刻创建的，且拥有不同的生命周期。
+#### 8.1.2 作用域
+1. 作用域是命名空间可直接访问的 Python 程序的文本区域
+2. 执行期间的任何时刻，都会有3或4个命名空间可被直接访问的嵌套作用域
+3. global 语句用于表明特定变量在全局作用域里，并应在全局作用域中重新绑定；nonlocal 语句表明特定变量在外层作用域中，并应在外层作用域中重新绑定。
+4. 如果不存在生效的 global 或 nonlocal 语句，则对名称的赋值总是会进入最内层作用域。
+5. 划重点，作用域是按字面文本确定的
+
+### [8.2 初探类](https://docs.python.org/zh-cn/3/tutorial/classes.html#a-first-look-at-classes) 
+#### 8.2.1 类定义语法
+```python
+class ClassName:
+    <statement-1>
+    .
+    .
+    <statement-n>
+```
+1. 与函数定义 (def 语句) 一样，类定义必须先执行才能生效
+2. 类定义的过程：
+    1. 当进入类定义时，将创建一个新的命名空间，并将其用作局部作用域
+    2. 当（从结尾处）正常离开类定义时，将创建一个类对象，与函数`def`之后会创建函数对象一样，原始的（在进入类定义之前起作用的）局部作用域将重新生效，类对象将在这里被绑定到类定义头所给出的类名称 (在这个示例中为 ClassName)
+#### 8.2.2 Class对象
+1. 类对象的基本操作是属性引用和实例化
+2. 类对象的**属性引用**使用标准语法`object.name`
+3. **实例化**用的是函数表示法，也就是`ClassName()`，实例化操作（“调用”类对象）会创建一个空对象并返回。
+```python
+class Person:
+    age = 18
+
+p = Person()
+```
+4. **实例化**时往往会创建一些初始状态的对象实例，为此需要用到`__init__`方法
+```python
+class Person:
+    def __init__(self, name, age, height, weight) -> None:
+        self.name = name
+        self.age = age
+        self.height = height
+        self.weight = weight
+    def print_person(self):
+        print(self.name, self.age, self.height, self.weight)
+```
+就像上述代码一样，这样实例化时就会创建含有相关初始内容的实例对象了
+
+#### 8.2.3 实例化对象
+1. 实例化对象可以进行的操作只有属性引用，有数据属性和方法属性
+```python
+Peter = Person('Peter', 18, 180, 110)
+'''
+>>> Peter.age
+18
+>>> Peter.name
+'Peter'
+'''
+```
+
+#### [8.2.4 方法对象](https://docs.python.org/zh-cn/3/tutorial/classes.html#method-objects)
+1. 方法对象与函数对象的区别主要在于：实例对象会作为函数的第一个参数被传入。
+2. 实例化对象中的是方法对象，和类对象中的函数对象是不一样的，从**实现细节**来看，方法对象是函数对象和实例对象打包形成的。下面的代码可以看出差别
+```python
+#以上面的代码为例子
+#实例化对象调用方法
+>>> Peter.print_person()
+Peter 18 180 110
+#类对象调用函数
+>>> Person.print_person()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: Person.print_person() missing 1 required positional argument: 'self'
+```
+
+#### [8.2.5 类变量和实例变量](https://docs.python.org/zh-cn/3/tutorial/classes.html#class-and-instance-variables)
+1. 一般来说，实例变量用于每个实例的唯一数据，而类变量用于类的所有实例**共享**的属性和方法。
+2. 但共享的属性如果是`mutable`（如list）的情况下，会出现实例修改类变量值的情况，导致所有实例访问时都发生了修改。
+3. 正确的类设计应该使用实例变量（在方法内部定义的）
+```python
+class Person:
+    def __init__(self, name, age, height, weight) -> None:
+        self.name = name
+        self.age = age
+        self.height = height
+        self.weight = weight
+#这里的name是实例变量
+```
+4. 如果同样的属性名称同时出现在实例和类中，则属性查找会优先选择实例
+
+<details>
+<summary>例子</summary>
+<p>
+
+```python
+class Person:
+    name = 'human'
+    def __init__(self, name, age, height, weight) -> None:
+        self.name = name
+        self.age = age
+        self.height = height
+        self.weight = weight
+    def print_person(self):
+        print(self.name, self.age, self.height, self.weight)
+
+Peter = Person('Peter', 18, 180, 110)
+'''
+>>> Peter.name
+'Peter'
+>>> Person.name
+'human'
+'''
+```
+
+</p>
+</details>
+
+### [8.3 补充说明](https://docs.python.org/zh-cn/3/tutorial/classes.html#random-remarks)
+1. 在Python中，没有任何东西能强制隐藏数据，隐藏数据这件事这完全是基于约定的。
+2. 函数定义的文本并非必须包含于类定义之内：将一个函数对象赋值给一个局部变量也是可以的。
+3. 方法可以通过使用 self 参数的方法属性调用其他方法
+
+### [8.4 继承](https://docs.python.org/zh-cn/3/tutorial/classes.html#inheritance)
+#### [8.4.1 简单继承](https://docs.python.org/zh-cn/3/tutorial/classes.html#inheritance)
+1. 类继承的语法
+```python
+class DerivedClass(BaseClass):
+    <statment>
+```
+> 1. BaseClass这个名称必须定义于包含派生类定义的作用域中。 也允许用其他任意表达式代替基类名称所在的位置。
+2. 派生类定义的执行过程与基类相同。当构造类对象时，基类会被记住。此信息将被用来解析属性引用
+3. 方法引用将按以下方式解析：搜索相应的类属性，如有必要将按基类继承链逐步向下查找，如果产生了一个函数对象则方法引用就生效。
+4. 派生类可能会重写其基类的方法。 
+5. 如果不想简单地替换掉同名的基类方法，可以直接调用基类方法：`BaseClass.method(self, argument)`
+
+#### [8.4.1 多重继承](https://docs.python.org/zh-cn/3/tutorial/classes.html#multiple-inheritance)
+1. 语法
+```python
+class DerivedClass(Base1, Base2, Base3):
+    <statement>
+```
+2. 引用的查找次序是先找自己，若没有找到，就从左往右，深度优先地遍历父类，但是在搜寻的过程中，不会重复搜索同一个父类。
+
+### [8.5 私有变量](https://docs.python.org/zh-cn/3/tutorial/classes.html#private-variables)
+1. Python中并不存在真正的私有变量，但是大多Python代码遵循着一个命名约定：带有一个下划线的名称 (例如 _spam) 应该被当作是 API 的非公有部分。
+2. 存在对私有变量机制的有限支持，称为名称改写。任何形式为__spam 的标识符（至少带有两个前缀下划线，至多一个后缀下划线）的文本将被替换为 _classname__spam
+```python
+class Person:
+    __kind = 'human'
+    
+class student(Person):
+    __kind = 'student'
+
+'''
+>>> dir(student)
+['_Person__kind', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_student__kind', 'print_person']
+'''
+```
+> 可以看到，子类中的__kind属性改名为_student__kind，而父类中的__kind属性改名为_Person__kind
+
+### [8.7 迭代器](https://docs.python.org/zh-cn/3/tutorial/classes.html#iterators)
+1. for语句的幕后：for 语句会在容器对象上调用 iter()。 该函数返回一个定义了 __next__() 方法的迭代器对象，此方法将逐一访问容器中的元素。 当元素用尽时，__next__() 将引发 StopIteration 异常来通知终止 for 循环。
+2. 根据for语句的幕后情况，可以定义一个 __iter__() 方法来返回一个带有 __next__() 方法的对象。 如果类已定义了 __next__()，则 __iter__() 可以简单地返回 self
+
+### [8.8 生成器](https://docs.python.org/zh-cn/3/tutorial/classes.html#generators)
+1. 生成器是一个用于创建迭代器的工具，需要使用到yield语句。
+2. 会自动创建 __iter__() 和 __next__() 方法。当生成器终结时，它们还会自动引发 StopIteration。
+2. 每次在生成器上调用 next() 时，它会从上次离开的位置恢复执行（它会记住上次执行语句时的所有数据值）。 
+
+### [8.9 生成器表达式](https://docs.python.org/zh-cn/3/tutorial/classes.html#generator-expressions)
+
+

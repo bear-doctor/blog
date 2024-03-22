@@ -19,7 +19,7 @@ const removeHttp = (url: string) => {
   return url.replace(/(^\w+:|^)\/\//, '')
 }
 
-const defaultVelocity = 0.4
+const defaultVelocity = 5
 const showProjects = projects.filter(i => i.preview)
 
 const Slider = ({ items }: { items: Project[] }) => {
@@ -32,8 +32,8 @@ const Slider = ({ items }: { items: Project[] }) => {
   const { scrollY } = useScroll()
   const scrollVelocity = useVelocity(scrollY)
   const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
+    damping: 20,
+    stiffness: 500,
   })
   const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 6], {
     clamp: false,
@@ -58,7 +58,7 @@ const Slider = ({ items }: { items: Project[] }) => {
 
     // 重置进度
     if (baseX.get() <= -3 * showProjects.length) {
-      baseX.set(11)
+      baseX.set(100)
     }
 
     baseX.set(baseX.get() + moveBy)

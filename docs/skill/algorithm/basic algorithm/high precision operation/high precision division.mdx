@@ -1,0 +1,69 @@
+---
+title: 高精度除法
+sidebar_label: 高精度除法
+sidebar_position: 4
+---
+
+## 定义
+
+这里的高精度除法指的是一个长度很大的数除以一个长度相对来说很小的数。
+
+从我们日常手算除法的过程来看，除法应该从高位开始运算，因此除法与别的高精度运算有些区别，即存储时应该从高位存储。**除法一定会出现前导零，因此需要去掉前导零。**
+
+## 实现
+<details>
+<summary> 题目链接 </summary>
+<p>
+
+[**Acwing链接**](https://www.acwing.com/problem/content/description/796/)
+
+</p>
+</details>
+
+```cpp
+#include<iostream>
+#include<deque>
+#include<string>
+using namespace std;
+
+//两个数相除
+void divide(deque<int> &A, int b)
+{
+    //设置结果
+    deque<int> result;
+    
+    //设置初始余数
+    int m = 0;
+    for(int i = 0; i < A.size(); i++)
+    {
+        m = m * 10 + A[i];
+        if(m < b) result.push_back(0);
+        else 
+        {
+            result.push_back(m / b);
+            m %= b;
+        }
+    }
+    
+    //去掉前导零
+    while(result.size() > 1 && result.front() == 0) result.pop_front();
+    
+    //输出结果和余数
+    for(int i = 0; i < result.size(); i++) printf("%d", result[i]);
+    printf("\n%d", m);
+}
+
+int main()
+{
+    string a;
+    int b;
+    cin >> a >> b;
+    
+    deque<int> A;
+    for(int i = 0; i <= a.size()-1; i++) A.push_back(a[i] - '0');
+    
+    divide(A, b);
+    
+    return 0;
+}
+```

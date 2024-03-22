@@ -1,0 +1,57 @@
+---
+sidebar-label: 单调栈
+title: 单调栈
+---
+
+## 定义
+栈中的元素从栈底到栈顶具有单调性
+
+## 用途
+可以求出：在一个序列中，位置 $i$ 左边第一个比它小（或大）的数。
+
+## 实现
+1. **原理**
+
+&emsp; 假设 $i > j + 1$， 当我们找位置 $i$ 左边第一个比它小的数，此时 $val[j] > val[j + 1]$，则我们一定不会取到 $val[j]$，那么我们可以将其去掉，**最后剩下的元素呈现单调增**，又因为我们删除元素的方向和加入元素的方向一致，代表这是一个栈，其中元素具有单调性，因此称为单调栈。
+
+&emsp; ***例子：***
+$val[j] = 3, val[j + 1] = 2, val[i] = 5$，当我们找位置 $i$ 左边第一个比它小的数时，一定不会是 3
+
+2. **思路**
+
+&emsp; 当我们入栈一个元素 $x$ 的时候，与栈顶元素进行比较，直到找到第一个小于 $x$ 的值或者栈为空。
+
+```cpp
+#include<iostream>
+using namespace std;
+
+const int N = 100010;
+int monostack[N];
+int n;
+
+int main()
+{
+    cin >> n;
+    
+    int top = 0;
+    
+    for(int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        while(top > 0)
+        {
+            if(monostack[top - 1] >= x) top--;
+            else break;
+        }
+        if(top == 0) cout << -1 << " ";
+        else cout << monostack[top - 1] << " ";
+        monostack[top++] = x;
+    }
+    
+    return 0;
+}
+```
+
+## 相关题目
+[**Acwing：单调栈**](https://www.acwing.com/problem/content/832/)

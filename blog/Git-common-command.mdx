@@ -1,0 +1,374 @@
+---
+slug: Git common command
+title: Git常见命令
+description: 根据Git Pro这本书上的前五章记录的常见命令
+authors: bear
+date: 2023-07-15T10:00
+tags: [Git]
+keywords: [Git]
+hide_table_of_contents: false
+---
+
+:::tip 
+
+此文章是根据Git Pro来写的，仅记录Git Pro上的小标题和里面的内容总结，方便我后续查找内容，小标题都链接到了Git Pro上对应的章节
+
+:::
+
+## 一、Git起步
+### [1.1 Git是什么](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)
+1. Git与其他VCS的区别
+2. Git近乎所有操作都是本地执行
+3. Git 保证完整性（Git所有数据在存储前都计算校验和）
+4. Git 一般只添加数据
+5. **Git的三种状态**
+
+{/* truncate */}
+
+### [1.2 Git安装](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%AE%89%E8%A3%85-Git)
+
+### [1.3 Git的初步配置](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-Git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE)
+1. Git的三种配置文件
+    + /etc/gitconfig文件，包含系统上每一个用户及他们仓库的通用配置。
+    + ~/.gitconfig 或 ~/.config/git/config 文件，只针对当前用户。
+    + 当前使用仓库的 Git 目录中的 config 文件（即 .git/config）：针对该仓库。
+```shell title='可以通过下面的命令来查看配置文件的位置'
+$ git config --list --show-origin
+```
+2. 用户信息配置
+```shell
+$ git config --global user.name "BearProfessor"
+$ git config --global user.email bear_professor@outlook.com
+```
+3. 文本编辑器配置
+```shell
+git config --global core.editor "code --wait"
+```
+上面是VsCode的例子，[**其他文本编辑器**](https://git-scm.com/book/zh/v2/%E9%99%84%E5%BD%95-C%3A-Git-%E5%91%BD%E4%BB%A4-%E8%AE%BE%E7%BD%AE%E4%B8%8E%E9%85%8D%E7%BD%AE#ch_core_editor)
+
+4. 检查配置信息
+```shell
+git config --list
+```
+
+### [1.4 获取帮助](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E8%8E%B7%E5%8F%96%E5%B8%AE%E5%8A%A9)
+```shell
+$ git help <verb>
+$ git <verb> --help
+$ man git-<verb>
+
+#如果不需要全面的手册，可以只用 -h 来获取更加简明的help
+$ git <verb> -h
+```
+
+## 二、Git基础
+### [2.1 获取Git仓库](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%8E%B7%E5%8F%96-Git-%E4%BB%93%E5%BA%93)
+
+通常有两种获取 Git 项目仓库的方式：
+1. 将尚未进行版本控制的本地目录转换为 Git 仓库；
+2. 从其它服务器克隆一个已存在的 Git 仓库。
+两种方式都会在你的本地机器上得到一个工作就绪的 Git 仓库。
+
+**在已存在目录中初始化仓库**
+```shell
+#首先需要进入该项目目录中
+#然后初始化
+$ git init #会创建.git目录
+#最后追踪文件并提交
+#git add <path>
+$ git add *.c
+$ git add LICENSE
+$ git commit -m 'initial project version'
+```
+**克隆现有的仓库**
+```shell
+#这会在当前目录下创建一个名为 “libgit2” 的目录，并在这个目录下初始化一个 .git 文件夹
+$ git clone https://github.com/libgit2/libgit2
+#想在克隆远程仓库的时候，自定义本地仓库的名字，你可以通过额外的参数指定新的目录名
+$ git clone https://github.com/libgit2/libgit2 mylibgit
+```
+
+### [2.2 记录每次更新到仓库](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%AE%B0%E5%BD%95%E6%AF%8F%E6%AC%A1%E6%9B%B4%E6%96%B0%E5%88%B0%E4%BB%93%E5%BA%93)
+1. 检查当前文件状态
+```shell
+git status
+```
+2. 添加新的文件
+```shell
+git add <file>
+#其中 <file> 可以是文件或者目录的路径，若是目录，则会递归地添加该目录下所有文件
+```
+3. 暂存已修改的文件
+```shell
+git add <file>
+```
+4. 状态简览
+```shell
+git status -s
+```
+5. 忽略文件
+
+一般使用`.gitignore`文件来指定要忽略哪些文件，忽略了文件之后，文件就不属于Git管理，也不会出现在未跟踪文件的列表中。`.gitignore`文件详情看Git Pro
+
+6. 查看已暂存和未暂存的修改
+```shell
+#查看未暂存的修改
+git diff
+#查看已暂存的修改
+git diff --staged
+#或者是
+git diff --cached
+```
+这些命令会显示与上一次保存的快照之间的差异
+
+7. 提交更新
+```shell
+#提交之前建议查看一下信息
+#提交
+git commit
+#这样会打开文本编辑器，让你输入说明，输入之后，关掉编辑器就会自动提交
+
+#也可以让说明信息和命令同一行
+git commit -m "this is my first commit"
+#这样不会打开文本编辑器
+```
+> 注意每一次提交的内容都是暂存区中的
+
+8. 跳过使用暂存区
+
+有时候提交到暂存区的操作有些繁琐，可以跳过暂存直接提交
+```shell
+git commit -a
+#这样会跳过git add这一步
+```
+
+9. 移除文件
+```shell
+#先删除该文件
+#然后在调用git rm命令
+git rm <file>
+#若是想要保留该文件在工作目录中
+git rm --cached <file>
+#若是想要强制删除
+git rm -f <file>
+```
+
+10. 移动文件
+```shell
+git mv <oldfile> <newfile>
+```
+
+### [2.3 查看提交历史](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2)
+1. 基本的查看命令
+```shell
+git log
+```
+`git log`命令后面可以跟分支，[**详情看Table2**](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2)
+
+2. 限制输出的记录的条数
+```shell
+#输出两条最近的记录
+git log -2
+```
+
+3. 查看每次提交记录的差异
+```shell
+git log -p 
+#或者
+git log --patch
+```
+
+4. 查看提交的简略信息
+```shell
+git log --stat
+```
+
+5. 使用不同的格式来展示提交信息
+```shell
+#以一行显示
+git log --pretty=oneline
+#自定义格式
+git log --pretty=format:"%h - %an %ar %s"
+#%h 是展示简略的哈希值
+#%an 是展示作者的名字
+#%ar 是作者最后的修改时间
+#%s 是提交说明
+```
+还有一些格式化选项和format后面的值，[**详情看Table1**](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2)
+
+6. 用ASCII图来展示分支与合并分支
+```shell
+git log --graph
+```
+
+7. 限制输出的长度
+```shell
+#显示最近的两条提交
+git log -2
+#显示在某时间之后的提交
+git log --after 2023-07-15
+#显示作者是某人的提交
+git log --author BearProfessor
+#显示说明文字包含指定字符串的提交
+git log --grep "commit"
+```
+还有可以选择的值，[**详情看Table3**](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2)
+
+8. 隐藏合并提交
+```shell
+git log --no-merges
+```
+
+### [2.4 撤销操作](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%92%A4%E6%B6%88%E6%93%8D%E4%BD%9C)
+1. 修改上一次的提交
+
+假如上一次提交以来，还未修改（是指修改提交记录，而不是工作区或暂存区的内容），就可以用这个命令
+```shell
+git commit -m "BearProfessor"
+git add test.mdx
+git commit --amend
+```
+> 在这个命令调用之后，会打开默认的文本编辑器，可以在里面修改提交信息
+
+2. 取消暂存的文件
+```shell
+git reset <file>
+#调用这个命令之后，文件会回到未跟踪状态
+```
+
+3. 撤销对于文件的修改
+```shell
+git checkout  --<file>
+```
+> 这是一个很危险的命令，因为对于该文件的所有本地修改都会消失。
+> 如果想保留修改，但仍然想撤销，可以用分支技术
+
+### [2.5 远程仓库](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8)
+1. 查看远程仓库
+```shell
+#列出每一个远程仓库的简写
+git remote
+#列出所有远程仓库的信息
+git remote -v
+#详细地列出某一个特定的仓库的详细信息
+git remote show <remote>
+```
+> 若是克隆远程仓库，其仓库简写默认为`origin`，默认情况下，`git clone` 命令会自动设置本地 `master`分支跟踪克隆的远程仓库的 `master` 分支（或其它名字的默认分支
+
+2. 添加远程仓库
+```shell
+git remote add 别名 url
+#例子
+git remote add bearprofessor https://github.com/bear-doctor/website.git
+```
+
+3. 从远程仓库中抓取和拉取
+```shell
+#抓取
+git fetch <remote>
+#这个命令会访问远程仓库，从中拉取所有你还没有的数据。执行完成后，你将会拥有那个远程仓库中所有分支的引用，可以随时合并或查看。
+git pull
+#自动抓取后合并该远程分支到当前分支
+```
+
+4. 推送到远程仓库
+```shell
+git push <remote> <branch>
+#把<branch>推送到远程仓库<remote>中
+```
+
+5. 远程仓库的重命名和移除
+```shell
+#重命名
+git remote rename <old> <new>
+#移除
+git remote remove <repository>
+```
+
+### [2.6 给提交记录打标签](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%89%93%E6%A0%87%E7%AD%BE)
+1. 列出标签
+```shell
+#列出所有标签
+git tag
+#根据指定匹配规则列出标签
+git tag --list "通配规则"   
+#例子
+git tag --list "v1.85*"
+```
+
+2. 创建标签
+有两种标签：轻量标签和附注标签，轻量标签像是一个引用，而附注标签拥有更多信息，如标签什么时候签的，打标签的人是谁
+```shell title="附注标签"
+#用 -a 即可创建附注标签， -m 是指定存储在标签里的信息
+git tag -a <tag> -m "message"
+#例子
+git tag -a v1.0 -m "version 1"
+#查看附注标签的具体信息
+git show <tag>
+#会显示标签信息和提交信息
+```
+
+```shell title="轻量标签"
+#不需要任何选项
+git tag <tag>
+#git show 不会显示任何标签信息
+```
+
+3. 后期打标签
+```shell
+#给以前的提交记录打标签
+git tag -a <tag> checkout
+#checkout是以前的提交记录的校验和，可以是一部分
+```
+
+4. 共享标签
+```shell
+#git push时并不会将标签一同推送，需要显式地指定
+git push <remote> <tagname>
+#例子
+git push origin v1.5
+#想要一次性将所有标签全部推送
+git push origin --tags
+```
+
+5. 删除标签
+```shell
+#删除本地标签
+git tag -d <tag>
+#删除远程仓库的标签
+#第一种写法
+git push <remote> :refs/tags/<tagname>
+#第二种写法
+git push <remote> --delete <tagname>
+```
+
+6. 检出标签
+```shell
+git checkout <tagname>
+```
+:::danger 注意
+
+这里会造成”分离头指针”的状态，这个状态有些不好的副作用
+
+:::
+
+### [2.7 别名](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-Git-%E5%88%AB%E5%90%8D)
+可以用`git config`文件来配置别名
+```shell
+#例子
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.ci commit
+$ git config --global alias.st status
+
+#别名的范围可以更大一些
+$ git config --global alias.unstage 'reset HEAD --'
+#这使得下面两个命令等价
+$ git unstage fileA
+$ git reset HEAD -- fileA
+```
+上面是给Git子命令添加别名，也可以给外部命令添加别名，这需要在命令前加上**“!”** 
+```shell
+$ git config --global alias.visual '!gitk'
+#git gitk 是 git visual 的别名
+``` 

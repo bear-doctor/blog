@@ -1,0 +1,30 @@
+---
+title: LaTeX的中文处理
+sidebar-label: LaTeX的中文处理
+---
+
+## 中文处理
+### 显示中文
+有两种做法：
+1. 在texstudio的设置中，编辑器一栏选中“utf-8”，在构建一栏选中“xelatex”，最后在文档中加入`\usepackage{ctex}`
+2. 前面不变，最后一步不加入`\usepackage{ctex}`，而是`\documentclass{ctexart}`等选用ctex包中的文档类型(ctexart, ctexrep, ctexbook)
+```latex
+% 第一种
+\documentclass{ctexart}
+
+\usepackage{ctex}
+
+% 第二种
+\documentclass{ctexart}
+```
+### 选择中文字体
+```latex
+% 直接在中文前面使用命令 \字体
+\title{\kaishu 第一次使用LaTeX}
+\author{\kaishu 小明}
+
+
+\begin{document}
+    \heiti 你好
+\end{document}
+```

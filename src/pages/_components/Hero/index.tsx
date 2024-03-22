@@ -3,6 +3,7 @@ import { Variants, motion, useScroll, useTransform } from 'framer-motion' // Imp
 
 import Translate from '@docusaurus/Translate'
 
+// 导入图片
 import HeroMain from './img/hero_main.svg'
 
 import styles from './styles.module.scss'
@@ -71,6 +72,7 @@ function Circle() {
   return <div className={styles.circle} />
 }
 
+// 这是首页左半边的名字部分
 function Name() {
   return (
     <motion.div
@@ -84,7 +86,7 @@ function Name() {
         e.currentTarget.style.setProperty('--y', `${e.clientY}px`)
       }}
     >
-      <Translate id="homepage.hero.greet">你好! 我是</Translate>
+      <Translate id="homepage.hero.greet">Hi~我是</Translate>
       <span
         className={styles.name}
         onMouseMove={e => {
@@ -93,13 +95,14 @@ function Name() {
           e.currentTarget.style.setProperty('--mouse-y', `${bounding.y}px`)
         }}
       >
-        <Translate id="homepage.hero.name">愧怍</Translate>
+        <Translate id="homepage.hero.name">小熊博士</Translate>
       </span>
       <span className={styles.wave}>👋</span>
     </motion.div>
   )
 }
 
+// 首页第一个页面的内容
 export default function Hero() {
   return (
     <motion.div className={styles.hero}>
@@ -107,10 +110,11 @@ export default function Hero() {
         <Name />
         <motion.p custom={2} initial="hidden" animate="visible" variants={variants}>
           <Translate id="homepage.hero.text">
-            {`在这里我会分享各类技术栈所遇到问题与解决方案，带你了解最新的技术栈以及实际开发中如何应用，并希望我的开发经历对你有所启发。`}
+            {`这里主要是记录我学习过程中的笔记和一些困难，希望能够对你有所帮助`}
           </Translate>
         </motion.p>
         <motion.div custom={3} initial="hidden" animate="visible" variants={variants}>
+          {/* 社交图标 */}
           <SocialLinks />
         </motion.div>
 
@@ -130,7 +134,8 @@ export default function Hero() {
         </motion.div>
       </div>
       <motion.div className={styles.background}>
-        <Skills />
+        {/* 这是技能图标 */}
+        {/* <Skills />  */}
         <HeroMain />
         <Circle />
       </motion.div>

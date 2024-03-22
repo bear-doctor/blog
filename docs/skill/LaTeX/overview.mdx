@@ -1,0 +1,99 @@
+---
+title: 概述
+sidebar-label: 概述
+
+---
+
+## 用命令行与记事本来操作
+### LaTeX文件编写
++ 先创建文件和文件夹
+```shell
+cd D:/
+mkdir test
+notepad test.tex
+# -----------------------------#
+```
++ 编写文件内容
+```latex
+\documentclass{article}
+
+\usepackage{ctex}
+
+\begin{document}
+
+你好 \LaTeX。
+
+\end{document}
+```
+
+### 手动编译
+```shell
+# dir ## 用于展示当前文件夹的内容
+# ------------编写文件ing--------------- #
+latex test.tex  # 编写好文件内容之后需要进行编译，会生成test.dvi文件
+dvipdfmx test.dvi  # 将dvi文件转成pdf
+# 查看pdf文件
+.\test.pdf
+```
+### 自动编译
+这里需要用到`xelatex`命令
+```shell
+notepad test.tex
+# ------------ 编写文件 -----------------#
+xelatex test.tex
+# 查看文件
+.\ test.pdf
+```
+> `xelatex`的一个好处是可以编译中文，但还需要两个前提
+> 1. 文本文件另存的时候，需要保存为utf-8的编码geshi 
+> 2. 在latex文件中需要加入`usepackage{ctex}`命令
+
+### 写脚本编译
++ 需要将编译的命令放入`.bat`为后缀的文件中
+```shell title='build.bat'
+latex test.tex
+dvipdfmx test.dvi
+del *.aux *.log *.dvi  # 删除所有中间文件
+
+#------------或者---------------#
+
+xelatex test.tex
+del *.aux *.log *.dvi
+```
++ 执行脚本
+```shell
+.\build
+```
+
+## LaTeX帮助
+1. 利用`texdoc`命令可以查看文档
+```shell
+% 查看ctex的文档
+texdoc ctex
+```
+2. 查看LaTeX的简短教程
+```shell
+texdoc lshort-zh
+```
+
+## 自定义命令
+```latex
+\newcommand{name}[num]{definition}
+% name是命令名
+% num是可选的，表示所定义的命令需要的参数个数
+% definition是关于命令定义
+
+% ---------------------------------% 
+
+% 例子
+\newcommand{\hello}{hello world}
+
+% 调用
+\hello
+
+\hello 
+
+% 结果是得到两个hello world
+```
+
+

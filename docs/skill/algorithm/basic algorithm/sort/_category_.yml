@@ -1,0 +1,11 @@
+position: 2 # float position is supported
+label: '排序'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 排序
+  description: '排序算法有多种: 1. 插入排序（直接插入排序，折半插入排序，希尔插入排序） 2. 交换排序（冒泡排序，快速排序） 3. 选择排序（简单选择排序，堆排序） 4. 归并排序和基数排序'

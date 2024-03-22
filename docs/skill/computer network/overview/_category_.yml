@@ -1,0 +1,11 @@
+# position: 2.5 # float position is supported
+label: '概述'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 计算机网络概述
+  # description: '根据Python官方教程，Mooc北大的内容来记录的笔记'

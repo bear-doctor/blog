@@ -1,0 +1,10 @@
+position: 1 # float position is supported
+label: '查找'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 查找

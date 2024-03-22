@@ -1,0 +1,105 @@
+---
+title: Python中常用模块
+sidebar_label: 模块
+---
+
+## [模块](https://docs.python.org/zh-cn/3/tutorial/modules.html#)
+### 1. 模块详解
++ 模块是包含 Python 定义和语句的文件。其文件名是模块名加后缀名 .py。
++ 在模块内部，通过内置全局变量 __name__ 可以获取模块名（即字符串）
++ 每个模块都有自己的命名空间，该命名空间被模块中定义的所有函数用作全局命名空间。
++ 模块可以导入其他模块
++ 不同的导入模块方式
+```python
+#假设有一个fibo.py文件，里面有fib1，fib2函数
+#导入一个模块
+import fibo
+#直接导入模块内的名称
+from fibo import fib1
+#导入模块内所有名称（不建议使用）
+from fibo import *
+#导入模块，然后与自己设定的名字绑定
+import fibo as fib
+from fibo import fib1 as fabonaci
+```
+:::tip 注意
+
+`import fibo`这种方式并不会直接导入整个模块，只会导入模块名，所以这种导入方式调用函数的时候，需要用模块名来显示表示，如：`fibo.fib(n)`
+
+:::
+
+#### 6.1.1 以脚本方式执行模块
+依旧以上面的fibo模块为例子
+```python
+python fibo.py 50
+#这会让fibo成为程序入口，即__name__ = "__main__"
+#导入模块不会让模块成为程序入口
+import fibo #__name__依旧为模块名
+```
+:::tip
+
+这里其实把`__name = "__main__"`，然后把下列代码添加到了模块末尾。当让fibo.py作为程序入口时，会调用下面的代码    
+```python
+if __name__ == "__main__":
+    import sys
+    fib(int(sys.argv[1]))
+    fib2(int(sys.argv[1]))
+```
+
+:::
+
+#### [6.1.2 模块搜索路径](https://docs.python.org/zh-cn/3/tutorial/modules.html#the-module-search-path)
+
+#### [6.1.3 “已编译”的Python文件]
+
+### [6.2 标准模块](https://docs.python.org/zh-cn/3/tutorial/modules.html#standard-modules)
+
+### [6.3 dir函数](https://docs.python.org/zh-cn/3/tutorial/modules.html#the-dir-function)
+内置函数 dir() 用于查找模块定义的名称。返回结果是经过排序的字符串列表
+```python
+import sys, fibo
+#有参数时，列出该模块内所有定义的名称
+dir(fibo)
+dir(sys)
+#没有参数时，dir() 列出当前定义的名称
+dir()
+```
+> dir() 不会列出内置函数和变量的名称。这些内容的定义在标准模块 builtins 里。
+
+### [6.4 包](https://docs.python.org/zh-cn/3/tutorial/modules.html#packages)
+包的概念：包是一种用“点式模块名”构造 Python 模块命名空间的方法。例如，模块名 A.B 表示包 A 中名为 B 的子模块。正如模块可以区分不同模块之间的全局变量名称一样。
+
+#### [6.4.1 从包中导入模块]
+1. 包的结构：若干个代表不同功能的子包，和一个`__init__.py`文件，这个文件让Python将这个目录视为包，防止包内的一些常用的名称覆盖掉其他模块的相同名称。最简单的情况下，`__init__.py`是一个空文件。当然，里面也可以写包的配置信息。
+2. 从包中导入单个模块，有[**三种方法。**](https://docs.python.org/zh-cn/3/tutorial/modules.html#packages)
+```python
+#假设fibo包中有两个模块，一个是print_fib.py，一个是return_fib.py，每个模块中都有一个fib函数（同名）
+#第一种导入方式
+import fibo.print_fib
+#调用时需加上子模块全名
+fibo.print_fib.fib(50)
+#第二种
+from fibo import print_fib
+#调用时可以直接调用，不需要写全名
+print_fib.fib(50)
+#直接导入模块中函数
+from fibo.print_fib import fib
+#直接调用函数
+fib(50)
+```
+> 注意后两种调用方式都是把模块名导入到当前的名称空间了，可能会导致覆盖了同名的变量，函数或模块
+
+#### [6.4.2 从包中导入*](https://docs.python.org/zh-cn/3/tutorial/modules.html#importing-from-a-package)
+1. 理想情况下，导入*意味着导入该包中所有子模块，操作时间长，也可能会产生不必要的副作用。
+2. 解决方法：提供包的显式索引。在`__init__.py`中定义`__all__`变量，用子模块**列表**来指定导入的模块。
+> `__all__`中的子模块列表中的子模块名称，会被`__init__.py`中的同名名称所替代。
+3. 如果没有显示指定导入模块，`import *`的方式也不会导入所有模块，只保证导入包，然后，再导入包中定义的名称。这些名称包括 __init__.py 中定义的任何名称（以及显式加载的子模块），还包括之前 import 语句显式加载的包里的子模块。
+
+#### [6.4.3 子包参考](https://docs.python.org/zh-cn/3/tutorial/modules.html#intra-package-references)
+1. 包中含有多个子包时（与示例中的 sound 包一样），可以使用绝对导入引用兄弟包中的子模块。
+2. 还可以用 import 语句的 from module import name 形式执行相对导入。
+
+#### [6.4.4 多目录的包](https://docs.python.org/zh-cn/3/tutorial/modules.html#intra-package-references)
+包支持一个更特殊的属性 __path__ 。在包的 :file:__init__.py 文件中的代码被执行前，该属性被初始化为包含 :file:__init__.py 文件所在的目录名在内的列表。可以修改此变量；但这样做会影响在此包中搜索子模块和子包。
+
+这个功能虽然不常用，但可用于扩展包中的模块集。

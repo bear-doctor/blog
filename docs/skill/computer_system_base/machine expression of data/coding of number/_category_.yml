@@ -1,0 +1,12 @@
+# position: 2.5 # float position is supported
+label: '数值数据的编码'
+# collapsible: true # make the category collapsible
+# collapsed: false # keep the category open by default
+# className: red
+# customProps:
+#   description: 
+link:
+  type: generated-index
+  title: 数值数据的编码
+  description: '数值数据具有三要素：进位计数值，定/浮点表示，编码规则'
+
