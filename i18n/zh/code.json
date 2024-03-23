@@ -12,12 +12,12 @@
     "message": "Hello! 我是",
     "description": "hero greet"
   },
-  "愧怍": {
-    "message": "愧怍",
+  "小熊博士": {
+    "message": "小熊博士",
     "description": "my name"
   },
   "homepage.hero.text": {
-    "message": "在这里我会分享各类技术栈所遇到问题与解决方案，带你了解最新的技术栈以及实际开发中如何应用，并希望我的开发经历对你有所启发。",
+    "message": "这里主要是记录我学习过程中的笔记和一些困难，希望能够对你有所帮助",
     "description": "hero text"
   },
   "homepage.hero.look": {
@@ -39,10 +39,6 @@
   "hompage.hero.idea": {
     "message": "想法感悟",
     "description": "Idea label"
-  },
-  "homepage.qqgroup": {
-    "message": "QQ 群：5478458",
-    "description": "qq group"
   },
   "自我介绍": {
     "message": "自我介绍",
@@ -125,7 +121,7 @@
     "description": "The label used to navigate to the older blog posts page (next page)"
   },
   "theme.blog.post.readingTime.plurals": {
-    "message": "{readingTime} 分钟阅读",
+    "message": "📖{readingTime} 分钟阅读⌛",
     "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
   },
   "theme.blog.post.readMoreLabel": {
@@ -160,7 +156,7 @@
     "message": "推荐阅读"
   },
   "theme.blog.title.new": {
-    "message": "最新博客"
+    "message": "⚡最新博客"
   },
   "theme.blog.tagTitle": {
     "message": "{nPosts} 含有标签「{tagName}」",

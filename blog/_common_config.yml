@@ -1,8 +1,8 @@
----
-slug: mongodb-time-grouping  # 用于定制页面的URL
-title: MongoDB按时间分组  # 博客标题
-date: 2021-08-30  # 时间
-authors: kuizuo # 作者
-tags: [mongodb] # 标签，这个网站主题可以把相同标签的文章统计在一起
-keywords: [mongodb] # 关键词
----
+# ---
+# slug: mongodb-time-grouping  # 用于定制页面的URL
+# title: MongoDB按时间分组  # 博客标题
+# date: 2021-08-30  # 时间
+# authors: kuizuo # 作者
+# tags: [mongodb] # 标签，这个网站主题可以把相同标签的文章统计在一起
+# keywords: [mongodb] # 关键词
+# ---

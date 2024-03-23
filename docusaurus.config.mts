@@ -97,7 +97,7 @@ const config: Config = {
             { label: '博客', to: 'blog' },
             { label: '归档', to: 'blog/archive' },
             { label: '笔记', to: 'docs/skill' },
-            // { label: '实战项目', to: 'project' },
+            { label: '实战项目', to: 'project' },
             // { label: '前端示例', to: 'https://example.kuizuo.cn' },
           ],
         },
@@ -274,12 +274,12 @@ const config: Config = {
   ],
   i18n: {
     defaultLocale: 'zh-CN',
-    locales: ['en', 'zh-CN'],
-    localeConfigs: {
-      en: {
-        htmlLang: 'en-GB',
-      },
-    },
+    locales: ['zh-CN'],
+    // localeConfigs: {
+    //   en: {
+    //     htmlLang: 'en-GB',
+    //   },
+    // },
   },
 }
 

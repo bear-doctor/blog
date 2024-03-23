@@ -1,6 +1,6 @@
 {
   "title": {
-    "message": "愧怍",
+    "message": "🐻‍❄️小熊博士",
     "description": "The title in the navbar"
   },
   "item.label.标签": {
@@ -26,21 +26,5 @@
   "item.label.技术笔记": {
     "message": "技术笔记",
     "description": "Navbar item with label 技术笔记"
-  },
-  "item.label.网址导航": {
-    "message": "网址导航",
-    "description": "Navbar item with label 网址导航"
-  },
-  "item.label.JS代码还原": {
-    "message": "JS代码还原",
-    "description": "Navbar item with label JS代码还原"
-  },
-  "item.label.CyberChef加密": {
-    "message": "CyberChef加密",
-    "description": "Navbar item with label CyberChef加密"
-  },
-  "item.label.网盘": {
-    "message": "网盘",
-    "description": "Navbar item with label 网盘"
   }
 }
