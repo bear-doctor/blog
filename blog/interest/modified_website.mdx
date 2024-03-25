@@ -1,0 +1,261 @@
+---
+title: 对博客主题的修改
+description: 修改博客主题
+authors: bear
+date: 2024-03-25
+tags: [website]
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import BrowserWindow from '@site/src/components/BrowserWindow'
+
+由于docusaurus进行了更新，我就顺便更新了我的博客版本，还从官方的网站展示中找到了“愧怍”博主的主题，然后我就根据这个主题来进行修改得到我现在的博客主题，在修改过程中，我还借鉴了“快慢”博主的主题。可以参考以下链接：
+- [docusaurus官网](https://docusaurus.io/zh-CN/)
+- [愧怍博主的主题魔改](https://kuizuo.cn/docs/docusaurus-guides)
+- [快慢博主的主题魔改](https://www.shaking.site/docs/Docusaurus-guides)
+
+{/* truncate */}
+
+## 前言
+修改博客主题对于不懂前端的我而言实在有些费劲，因为总有一些意向不到的错误。并且在最开始搭建博客的时候，我完全没有了解过这一方面内容，因此在修改主题过程中，我得花上不少时间从头开始看docusaurus官方文档上。结果到最后修改主题就花了三天时间，再加上我对博客中文档内容的修改，就花了更多时间了。
+
+现在回过头去想，这可能有点违背我搭建博客的初衷了，博客应该是笔记的载体，重要的在与内容，主题只是锦上添花罢了。因此，在后面很长一段时间，我都会保持这一个主题。
+
+如果你和我的情况一样，不懂前端知识又想折腾一个较为美观的个人博客，我个人认为可以去docusaurus的网站展示中寻找你认为美观并且开源的主题。有很多博主将他们的博客网站主题在上面分享出来了，你可以使用这些主题，并修改成你想要的主题样式。我的主题是“愧怍小站”的主题样式。
+
+## 博客的结构
+当你采用这个主题之后，就可以直接看到这个博客的结构了。
+```bash
+├── blog                           # 博客
+│   ├── first-blog.md
+├── docs                           # 文档/笔记
+│   └── doc.md
+├── data
+│   ├── feature.ts                 # 特点
+│   ├── friends.ts                 # 友链
+│   ├── projects.ts                # 项目
+│   ├── skills.ts                  # 技术栈
+│   ├── resources.ts               # 资源
+│   └── social.ts                  # 社交链接
+├── i18n                           # 国际化
+├── src
+│   ├── components                 # 组件
+│   ├── css                        # 自定义CSS
+│   ├── pages                      # 自定义页面
+│   ├── plugin                     # 自定义插件
+│   └── theme                      # 自定义主题组件
+├── static                         # 静态资源文件
+│   └── img                        # 静态图片
+├── docusaurus.config.ts           # 站点的配置信息
+├── sidebars.ts                    # 文档的侧边栏
+├── package.json
+├── tsconfig.json
+└── pnpm-lock.yaml
+```
+
+在后面的内容描述的时候，会出现`@site`，这个一般指的是博客的根目录，默认和docusaurus.config.mts一个位置.
+
+## 修改网站的基本配置
+最基本的配置文件就是`docusaurus.config.mts`，包括网站的标题，描述，图片，导航栏等等内容。还有一个文件是`sidebar.js`，这个是用来生成文档侧边栏的，与博客侧边栏没有关系。若只想进行网站的简单修改，除了修改博文内容，就需要修改这两个文件即可。这里可以参考：
+- [docusaurus.config.js的配置](https://docusaurus.io/docs/api/docusaurus-config)
+- [文档的侧边栏](https://docusaurus.io/docs/sidebar)
+
+## 修改网站的主题组件
+我们的网站默认使用了classic主题配置，只是在这个主题的基础上进行了修改。源主题组件位于`@docusaurus/theme-classic/src/theme/`中。若我们想要修改，可以将主题组件弹出至`@site/src/theme/`中。在这个文件夹中修改组件内容后，会覆盖源主题组件内容，用自定义的组件内容进行渲染。弹出命令为：
+```bash
+npm run swizzle -- --list
+```
+这会列出所有位于`@docusaurus/theme-classic/src/theme/`下的主题组件，然后我们可以输入自己想要的组件，例如输入doc，就会出现所有与doc有关的主题组件，我们选中想要的组件按下Enter，选择弹出，即可在`@site/src/theme/`中创建组件副本。更多自定义组件的内容查阅[官方文档](https://docusaurus.io/docs/swizzling)。
+
+## 修改首页
+利用docusaurus搭建的网站中的自定义页面都在`@site/src/pages`中。首页自然也在里面，名为`index.tsx`。从这个文件中，我们可以看到所有首页显示的内容。
+
+```javascript
+export default function Home(): JSX.Element {
+  const {
+    siteConfig: { customFields, tagline },
+  } = useDocusaurusContext()
+  const { description } = customFields as { description: string }
+
+  return (
+    <Layout title={tagline} description={description}>
+      <main>
+        {/* 这是首页最第一页，配置在_components/Hero中 */}
+        <Hero />
+        <div className="container-wrapper">
+          {/* 这是博客展示在首页的显示 */}
+          <BlogSection />
+          {/* 这是项目在首页的显示，配置在_components/ProjectSection中*/}
+          <HomepageProject />
+          {/* 这是个人特点在首页的显示，配置在_components/FeaturesSection中 */}
+          <FeaturesSection />
+        </div>
+      </main>
+    </Layout>
+  )
+}
+```
+
+### 首页初始页
+首页初始页是由Hero组件渲染的，若要初始页的内容，我们需要修改Hero组件的内容，这个组件内容在`@site/src/pages/_components/Hero`下。
+- 若要修改首页初始页的内容，需要修改`index.js`文件中的内容。
+- 若要修改联系方式，需要修改`@site/src/components/SocialLinks`中的内容。
+- 若要修改首页初始页的样式，需要修改`style.module.scss`中的内容。
+- 若要修改首页的图片，需要将想要的图片放入`img`中，然后在`index.js`中修改图片的路径为你想要的背景图片即可。
+
+### 首页的展示内容
+首页的展示内容的所有配置都在`@site/src/pages/_components`下。只需要根据目录名字即可判断出来组件的作用，对应进行修改即可。
+
+### “关于我”页面
+首页的自我介绍按钮连接到了一个单独的页面，这个页面就是“关于我”页面，我们可以在`@site/src/pages/about.mdx`中进行修改。
+
+## 修改文档页面
+文档页面我并没有进行太大修改，仅仅修改了侧边栏的内容和样式。
+- 修改侧边栏的内容需要去修改`sidebar.js`中的内容。
+- 修改侧边栏样式可以在`@site/src/theme/docsidebar`中进行修改，也可以到`@site/src/css.custom.css`中进行修改。
+
+若是在`@site/src/theme/` 中没有找到docsidebar组件，这是因为没有将这个组件弹出，查看[swizzle组件](https://docusaurus.io/docs/swizzling)
+
+```css title="custom.scss"
+/* 侧边栏整体 */
+.menu {
+  font-size: 1rem;
+}
+
+/* 侧边栏左侧线条 */
+.menu__list .menu__list {
+  border-bottom: 2px solid #e3cece;
+  border-bottom-color: #ffffff00!important;
+  border-left: 2px solid #ced9e3;
+  border-radius: 0 0 0 10px;
+  margin-left: 1rem;
+  padding-left: 0.3rem;
+}
+
+html[data-theme='dark'] .menu__list .menu__list{
+  border-bottom: 2px solid #615e5e;
+  border-left: 2px solid #615e5e;
+}
+```
+
+## 修改博客页面
+若要修改博客页面的内容，我们需要swizzle主题组件，将你想修改的与blog有关的组件弹出，然后进行修改即可。从博客布局组件 BlogLayout 中我们可以看到以下内容
+```javascript title="src/theme/BlogLayout/index.js"
+export default function BlogLayout(props: Props): JSX.Element {
+  const { sidebar, toc, children, ...layoutProps } = props
+  const hasSidebar = sidebar && sidebar.items.length > 0
+
+  return (
+    <Layout {...layoutProps}>
+      <div className="container margin-vert--md">
+        <div className="row">
+          <BlogSidebar sidebar={sidebar} />
+          {/* 这是主体 */}
+          <main
+            className={clsx('col', {
+              // 如果有侧边栏
+              'col--6': hasSidebar,
+              // 如果没有侧边栏
+              'col--6 col--offset-2': !hasSidebar,
+            })}
+            itemScope
+            itemType="h ttp://schema.org/Blog"
+          >
+            {children}
+          </main>
+          {/* 右侧文档目录 侧边栏占页面2份，主体6份，文档目录占2份*/}
+          {toc && <div className="col col--2">{toc}</div>}
+        </div>
+      </div>
+    </Layout>
+  )
+}
+```
+
+由于博客页面的右侧文档目录的宽度比较小，我想把这个目录宽度加大一些。为了实现这个目标，需要将容器宽度加大，因为右侧文档目录宽度是总宽度 1/5，这是由于设置类名为`col--2`决定的。
+<BrowserWindow>
+<Tabs>
+  <TabItem value="container" label="博客页面宽度和排版" default>
+    ```css
+    /* 修改博客页面的排版 */
+    .blog-post-page .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    /* 修改容器大小 */
+    .blog-post-page .container {
+      max-width: 1920px;
+    }
+    ```
+  </TabItem>
+  <TabItem value="table_of_contents" label="文档内容目录">
+    ```css
+    /* 这是右侧文档目录的配置 */
+    table-of-contents__link--active {
+      filter: none !important;
+      color: var(--ifm-color-primary-light) !important;
+      opacity: .8;
+      transform: scale(1.02)!important;
+      transform-origin: left;
+    }
+
+    .table-of-contents__link {
+      // filter: grayscale(100%);
+      padding: 0.3rem 0 0.3rem 0.3rem;
+      border-radius: 10px;
+      transition: filter 0.08s ease-in-out, background-color 0.08s ease-in-out;
+      margin-top: -0.5rem;
+      // transition: filter 0.2s ease-in-out, color 0.2s ease-in-out;
+      color:#4d4d4d;
+      transition: .25s!important;
+    }
+
+    [data-theme='dark'] .table-of-contents__link{
+      color: #cbccdc;
+    }
+
+    .table-of-contents__link:hover {
+      filter: none;
+      background-color: var(--ifm-menu-color-background-active) !important;
+      color: var(--ifm-color-primary-darkest) !important;
+    }
+
+    .table-of-contents {
+      font-size: 0.8rem;
+      // transition: filter 0.2s ease-in-out, background-color 0.2s ease-in-out;
+      // a {
+      //   color:#c1defa;
+      // }
+    }
+
+    html[data-theme='dark'] .table-of-contents__link:hover{
+      background-color:  #2e303d !important;
+    }
+    ```
+  </TabItem>
+</Tabs>
+</BrowserWindow>
+
+## 修改项目页面
+- 在`@site/src/pages/project/`中可以修改项目页面
+- 在`@site/data/projects.tsx`中添加项目的内容。
+
+## 修改友链页面
+- 在`@site/src/pages/friends/`中可以修改友链页面
+- 在`@site/data/friends.tsx`中添加友链的内容。
+
+## 修改资源页面
+- 在`@site/src/pages/resources/`中可以修改资源页面
+- 在`@site/data/resources.tsx`中添加资源的内容。
+
+## 添加组件
+若想自定义组件，可以在`@site/src/components/`中定义。我添加了一个高亮组件。
+
+## 修改一些CSS样式
+若想修改CSS样式，可以到`@site/src/css/custom.scss`中修改，也可以到对应组件的`style.module.css`中修改。在上面也提到一些在`custom.scss`中修改的内容。
+
+
+
+

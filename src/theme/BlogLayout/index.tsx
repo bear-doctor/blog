@@ -14,16 +14,20 @@ export default function BlogLayout(props: Props): JSX.Element {
       <div className="container margin-vert--md">
         <div className="row">
           <BlogSidebar sidebar={sidebar} />
+          {/* 这是主体 */}
           <main
             className={clsx('col', {
-              'col--8': hasSidebar,
-              'col--8 col--offset-2': !hasSidebar,
+              // 如果有侧边栏
+              'col--6': hasSidebar,
+              // 如果没有侧边栏
+              'col--6 col--offset-2': !hasSidebar,
             })}
             itemScope
             itemType="h ttp://schema.org/Blog"
           >
             {children}
           </main>
+          {/* 右侧文档目录 侧边栏占页面2份，主体8份，文档目录占2份*/}
           {toc && <div className="col col--2">{toc}</div>}
         </div>
       </div>

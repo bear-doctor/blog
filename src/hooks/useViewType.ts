@@ -1,21 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {useCallback, useEffect, useState} from 'react';
 
-export type ViewType = 'list' | 'grid'
+export type ViewType = 'list' | 'grid' | 'card';
 
 export function useViewType() {
-  const [viewType, setViewType] = useState<ViewType>('list')
+  const [viewType, setViewType] = useState<ViewType>('card');
 
   useEffect(() => {
-    setViewType((localStorage.getItem('viewType') as ViewType) || 'list')
-  }, [])
+    setViewType((localStorage.getItem('viewType') as ViewType) || 'card');
+  }, []);
 
   const toggleViewType = useCallback((newViewType: ViewType) => {
-    setViewType(newViewType)
-    localStorage.setItem('viewType', newViewType)
-  }, [])
+    setViewType(newViewType);
+    localStorage.setItem('viewType', newViewType);
+  }, []);
 
   return {
     viewType,
     toggleViewType,
-  }
+  };
 }

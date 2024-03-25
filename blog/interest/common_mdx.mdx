@@ -1,0 +1,338 @@
+---
+title: docusaurus博客常用的文档样式
+description: 修改博客主题
+authors: bear
+date: 2024-03-25
+tags: [website]
+---
+
+import TOCInline from '@theme/TOCInline';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import BrowserWindow2 from '@site/src/components/BrowserWindow2';
+import Highlight from '@site/src/components/HighLight'
+
+在写文档的时候，我有时会觉得单纯的markdown语法不能将我要表达的内容清楚地表达出来，或者是显示的样式并不美观。这时候，我们可以用docusaurus支持的 `.mdx` 文件类型来编写我们的文档。在这个类型的文档中，我们可以加入 javascript 语法，引入 JSX 组件，利用组件使得内容更加清晰，更加美观。
+
+这篇文章主要用来记录我用过的文档中的样式，并且给了相应的链接。
+
+{/* truncate */}
+
+## JSX 组件
+这个博客的特点就是引入了 mdx v3，这让我们在写 markdown 文档的时候可以使用 JSX 组件。若要使用组件，可以查阅下面资料来了解相关内容：
+- [MDX和React](https://docusaurus.io/zh-CN/docs/markdown-features/react)
+- [MDX插件](https://docusaurus.io/zh-CN/docs/markdown-features/plugins)
+- [Swizzle--调配组件](https://docusaurus.io/zh-CN/docs/swizzling)
+- [swizzle主题组件](https://kuizuo.cn/docs/docusaurus-component)（此文出自[愧怍](https://kuizuo.cn/)博主）
+
+## 高亮块
+有两种方式可以采用：导出组件，导入组件
+### 导出组件
+当我们在页面中自定义组件的时候，我们需要导出这个组件，只有使用`export`的时候不会被解释为markdown语法，才能正常使用自定义组件。
+```javascript
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#fff',
+      padding: '0.2rem',
+    }}>
+    {children}
+  </span>
+);
+```
+```markup title="使用这个组件"
+<Highlight color="#25c2a0">Docusaurus green</Highlight> and 
+<Highlight color="#1877F2">Facebook blue</Highlight> are my favorite colors.
+```
+<BrowserWindow>
+<Highlight color="#25c2a0">绿色高亮</Highlight> and 
+<Highlight color="#1877F2">蓝色高亮</Highlight>
+</BrowserWindow>
+
+### 导入组件
+还有一种更简单的方式，我们可以将这个高亮样式定义为一个组件，需要的时候直接导入组件即可。
+
+我们将组件定义在`@site/src/components`路径下，组件文件夹下至少要包含一个文件`index.json`，这个文件描述了组件的内容。若想调整样式，我们可以在组件文件夹下加上一个`style.module.css`文件来配置组件的样式。
+
+```javascript title="index.json"
+import React from 'react'
+
+// 这里color使用了默认值，若没有传值，则默认这个颜色
+function Highlight({children, color="#fbb656"}) {
+    return (
+        <span style={{
+            backgroundColor: color,
+            borderRadius: '2px',
+            color: '#fff',
+            padding: '0.2rem',
+        }}>
+        {children}
+        </span>
+    )
+}
+
+export default Highlight
+```
+
+```markup title="使用高亮组件"
+import HighLight from '@site/src/components/HighLight'
+
+<HighLight>默认颜色</HighLight> 和 <HighLight color="#25c2a0">绿色
+```
+<BrowserWindow>
+<Highlight>默认颜色</Highlight> 和 <Highlight color="#25c2a0">绿色</Highlight>
+</BrowserWindow>
+
+
+## 选项卡
+官网文档讲述了选项卡如何导入，自定义选项卡。更多选项卡样式查看[官方文档](https://docusaurus.io/zh-CN/docs/markdown-features/tabs)
+
+### 一个选项卡
+```markup
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="apple" label="Apple" default>
+    This is an apple 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    This is an orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    This is a banana 🍌
+  </TabItem>
+</Tabs>
+```
+<BrowserWindow>
+<Tabs>
+  <TabItem value="apple" label="Apple" default>
+    This is an apple 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    This is an orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    This is a banana 🍌
+  </TabItem>
+</Tabs>
+</BrowserWindow>
+
+### 多个选项卡
+当选项卡有多个的时候，我们可以选择这些选项卡是否同步，若选项卡的选择需要同步的时候，我们就给这些选项卡设置相同的`groupId`属性
+```markup
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Use Ctrl + C to copy.</TabItem>
+  <TabItem value="mac" label="macOS">Use Command + C to copy.</TabItem>
+</Tabs>
+
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Use Ctrl + V to paste.</TabItem>
+  <TabItem value="mac" label="macOS">Use Command + V to paste.</TabItem>
+</Tabs>
+```
+<BrowserWindow>
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Use Ctrl + C to copy.</TabItem>
+  <TabItem value="mac" label="macOS">Use Command + C to copy.</TabItem>
+</Tabs>
+
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Use Ctrl + V to paste.</TabItem>
+  <TabItem value="mac" label="macOS">Use Command + V to paste.</TabItem>
+</Tabs>
+</BrowserWindow>
+
+若选项卡的选择不需要同步，就设置不同的`groupId`即可
+```markup
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Windows in windows.</TabItem>
+  <TabItem value="mac" label="macOS">macOS is macOS.</TabItem>
+</Tabs>
+
+<Tabs groupId="non-mac-operating-systems">
+  <TabItem value="win" label="Windows">Windows is windows.</TabItem>
+  <TabItem value="unix" label="Unix">Unix is unix.</TabItem>
+</Tabs>
+```
+<BrowserWindow>
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Windows in windows.</TabItem>
+  <TabItem value="mac" label="macOS">macOS is macOS.</TabItem>
+</Tabs>
+
+<Tabs groupId="non-mac-operating-systems">
+  <TabItem value="win" label="Windows">Windows is windows.</TabItem>
+  <TabItem value="unix" label="Unix">Unix is unix.</TabItem>
+</Tabs>
+</BrowserWindow>
+
+## 代码块
+常见的代码块配置有以下几个
+1. 代码块的题目 [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#code-title)
+2. 代码块的语法高亮  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#syntax-highlighting)
+3. 代码块的行高亮  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#line-highlighting)
+4. 代码块的行数  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#line-numbering)
+5. 可交互的代码块  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#interactive-code-editor)
+6. 多语言代码块（例子：多个tab用不同的语言）  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/code-blocks#multi-language-support-code-blocks)
+
+```jsx title="代码块实例" {1,4-6} showLineNumbers
+import React from 'react';
+
+function MyComponent(props) {
+  if (props.isBar) {
+    return <div>Bar</div>;
+  }
+
+  return <div>Foo</div>;
+}
+
+export default MyComponent;
+```
+
+## 告示
+1. 告示注意事项  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#usage-with-prettier)
+2. 告示自定义题目  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#specifying-title)
+3. 告示可以嵌套 [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#nested-admonitions)
+3. 告示里面可以用MDX  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#admonitions-with-mdx)
+4. 告示可以用别的方法，如用JSX来实现  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#usage-in-jsx)
+5. 告示可以自定义样式  [**详情**](https://docusaurus.io/zh-CN/docs/markdown-features/admonitions#customizing-admonitions)
+
+<BrowserWindow>
+<Tabs groupId='admonitions'>
+  <TabItem value="note" label="note" default>
+    ```
+    :::note 告示
+
+    这是一条告示
+
+    :::
+    ```
+  </TabItem>
+  <TabItem value="info" label="info">
+        ```
+    :::info 信息
+
+    这是一条信息
+
+    :::
+    ```
+  </TabItem>
+  <TabItem value="tip" label="tip">
+    ```
+    :::tip 提示
+
+    这是一条提示    
+
+    :::
+    ```
+  </TabItem>
+  <TabItem value="warning" label="warning">
+    ```
+    :::warning 警告
+
+    这是一条警告  
+
+    :::
+    ```
+  </TabItem>
+  <TabItem value="danger" label="danger">
+    ```
+    :::danger 危险
+
+    这是一条危险通知
+
+    :::
+    ```
+  </TabItem>
+</Tabs>
+<Tabs groupId='admonitions'>
+  <TabItem value="note" label="note" default>
+
+:::note 告示
+
+这是一条告示
+
+:::
+
+  </TabItem>
+  <TabItem value="info" label="info">
+
+:::info 信息
+
+这是一条信息
+
+:::
+
+  </TabItem>
+  <TabItem value="tip" label="tip">
+
+:::tip 提示
+
+这是一条提示
+
+:::
+
+  </TabItem>
+  <TabItem value="warning" label="warning">
+
+:::warning 警告
+
+这是一条警告  
+
+:::
+
+  </TabItem>
+  <TabItem value="danger" label="danger">
+
+:::danger 危险
+
+这是一条危险通知
+
+:::
+
+  </TabItem>
+</Tabs>
+</BrowserWindow>
+
+
+## 浏览器窗口
+- 官方浏览器窗口样式
+<BrowserWindow url={"https://drbear.vercel.app"}>
+欢迎来到小熊博士的小窝！
+</BrowserWindow>
+
+```javascript title="官方浏览器窗口样式"
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+<BrowserWindow url={"https://drbear.vercel.app"}>
+欢迎来到小熊博士的小窝！
+</BrowserWindow>
+```
+
+- [shake博主](https://www.shaking.site/)设计的浏览器窗口样式
+<BrowserWindow2 url={"https://drbear.vercel.app"}>
+欢迎来到小熊博士的小窝！
+</BrowserWindow2>
+
+```javascript title="shake博主设计的浏览器窗口样式"
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+<BrowserWindow url={"https://drbear.vercel.app"}>
+欢迎来到小熊博士的小窝！
+</BrowserWindow>
+```
+
+## 标题和目录
+标题就用markdown的标准语法即可，而目录有自动生成的方法。可以查看[官方文档](https://docusaurus.io/zh-CN/docs/markdown-features/toc#inline-table-of-contents)。
+
+## 资源
+图片、文件、内嵌图片
+
+## 其他
+后续内容用到了再补充
+
+

@@ -2,15 +2,15 @@
   "name": "blog",
   "version": "3.0.0",
   "author": {
-    "url": "https://github.com/kuizuo",
-    "email": "hi@kuizuo.cn",
-    "name": "Kuizuo"
+    "url": "https://github.com/bear-doctor",
+    "email": "hi@bear_professor@outlook.com",
+    "name": "bear"
   },
   "repository": {
-    "url": "https://github.com/kuizuo/blog",
+    "url": "https://github.com/bear-doctor/blog",
     "type": "git"
   },
-  "homepage": "https://kuizuo.cn",
+  "homepage": "https://drbear.vercel.app",
   "license": "MIT",
   "scripts": {
     "docusaurus": "docusaurus",
@@ -49,6 +49,7 @@
     "prism-react-renderer": "^2.3.1",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
+    "react-awesome-reveal": "^4.2.8",
     "react-dom": "^18.2.0",
     "react-popper": "^2.3.0",
     "rehype-katex": "^7.0.0",

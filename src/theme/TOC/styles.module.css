@@ -1,9 +1,16 @@
 .tableOfContents {
-  max-height: calc(100vh - (var(--ifm-navbar-height) + 2rem));
+  max-height: calc(100vh - (var(--ifm-navbar-height) + 4rem));
   overflow-y: auto;
   position: sticky;
-  top: calc(var(--ifm-navbar-height) + 1rem);
-  color: var(--ifm-font-color-secondary);
+  top: calc(var(--ifm-navbar-height) + 2rem);
+  opacity: var(--unhovered-transparency);
+  padding: var(--padding);
+  border-radius: var(--border-radius);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.tableOfContents:hover {
+  opacity: 1;
 }
 
 @media (max-width: 996px) {
@@ -22,6 +29,7 @@
   border-top: 1px solid var(--ifm-toc-border-color);
 }
 
+/* 右侧百分比 */
 .percent {
   display: inline-block;
   margin: var(--ifm-toc-padding-vertical) var(--ifm-toc-padding-horizontal);

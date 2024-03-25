@@ -86,7 +86,7 @@ function Name() {
         e.currentTarget.style.setProperty('--y', `${e.clientY}px`)
       }}
     >
-      <Translate id="homepage.hero.greet">Hello！我是</Translate>
+      <Translate id="homepage.hero.greet">Hi！我是</Translate>
       <span
         className={styles.name}
         onMouseMove={e => {

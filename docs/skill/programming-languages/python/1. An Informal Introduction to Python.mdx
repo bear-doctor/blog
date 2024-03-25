@@ -1,10 +1,12 @@
 ---
 title: Python速览
-sidebar_label: 关于Python的简单介绍
+sidebar_label: Python速览
+sidebar_position: 1
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import BrowserWindow from '@site/src/components/BrowserWindow'
 
 :::tip Python中的数据类型
 
@@ -60,6 +62,7 @@ print("el" in a) #true
 print("y" not in b) #false
 ```
 11. 数字和字符串的互相转换
+<BrowserWindow>
 <Tabs>
   <TabItem value="字符串转为数字" label="字符串转为数字" default>
     
@@ -96,6 +99,8 @@ print("y" not in b) #false
 
   </TabItem>
 </Tabs>
+</BrowserWindow>
+
 12. 字符串的分割
 + 以一个分隔符来分割
 ```python title='用字符串中的split(seperatment)'

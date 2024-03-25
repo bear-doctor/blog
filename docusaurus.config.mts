@@ -1,6 +1,6 @@
 import type { Config } from '@docusaurus/types'
 import type * as Preset from '@docusaurus/preset-classic'
-import { themes } from 'prism-react-renderer'
+import {themes as prismThemes} from 'prism-react-renderer';
 import { GiscusConfig } from './src/components/Comment/index.jsx'
 import social from './data/social.js'
 import remarkMath from 'remark-math';
@@ -28,6 +28,7 @@ const config: Config = {
     //   content: ``,
     // },
 
+    // 全局元，用于搜索引擎优化
     metadata: [
       {
         name: 'keywords',
@@ -62,14 +63,14 @@ const config: Config = {
           to: 'blog',
         },
         {
-          label: '🤖项目',
-          position: 'right',
-          to: 'project',
-        },
-        {
           label: '📒笔记',
           position: 'right',
           to: 'docs/skill',
+        },
+        {
+          label: '🤖项目',
+          position: 'right',
+          to: 'project',
         },
         {
           label: '🔮更多',
@@ -140,8 +141,8 @@ const config: Config = {
       indexName: 'kuizuo',
     },
     prism: {
-      theme: themes.oneLight,
-      darkTheme: themes.oneDark,
+      theme: prismThemes.github,
+      darkTheme: prismThemes.vsDark,
       additionalLanguages: [
         'bash',
         'json',
@@ -152,6 +153,7 @@ const config: Config = {
         'rust',
         'toml',
         'protobuf',
+        'cpp'
       ],
       defaultLanguage: 'javascript',
       // 行内注释的样式，官方文档code block中有提到
@@ -271,6 +273,14 @@ const config: Config = {
   stylesheets: [
     'https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Normal.min.css',
     'https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Semibold.min.css',
+    // katex CSS源
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    }
   ],
   i18n: {
     defaultLocale: 'zh-CN',
