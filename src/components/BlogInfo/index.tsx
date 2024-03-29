@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx'
 import useGlobalData from '@docusaurus/useGlobalData';
 import type {
   BlogTag,
@@ -14,6 +15,8 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { projects } from '@site/data/projects';
 import { resourceData } from '@site/data/resources';
 import { usePluginData } from '@docusaurus/useGlobalData'
+import styles from './styles.module.scss'
+import SocialLinks from '@site/src/components/SocialLinks'
 
 let Fade; // 声明一个全局变量来保存 Fade
 
@@ -30,81 +33,72 @@ type Count = {
   project: number;
 };
 
-export function BlogUser({
-  count,
-  isNavbar = false,
-}: {
-  count?: Count;
-  isNavbar?: boolean;
-}) {
+export function BlogUser({ isNavbar = false }: { isNavbar?: boolean }) {
   const {
-    siteConfig: { tagline },
-  } = useDocusaurusContext();
+    siteConfig: { customFields },
+  } = useDocusaurusContext()
+  const { bio } = customFields as { bio: string }
+
   const {
     navbar: { title, logo = { src: '' } },
-  } = useThemeConfig();
+  } = useThemeConfig()
 
-  const logoLink = useBaseUrl(logo.src || '/');
+  const logoLink = useBaseUrl(logo.src || '/')
 
-  if (!count) {
-    const globalData = useGlobalData();
-    const blogPluginData = globalData?.['docusaurus-plugin-content-blog']?.[
-      'default'
-    ] as any;
-    const blogData = blogPluginData?.blogs as BlogPost[];
-    const tagData = blogPluginData?.tags as BlogTags;
+  const blogData = usePluginData('docusaurus-plugin-content-blog') as {
+    posts: BlogPost[]
+    postNum: number
+    tagNum: number
+  }
+  const docData = (
+    usePluginData('docusaurus-plugin-content-docs') as { versions: { docs: BlogPost[] } }
+  )?.versions[0].docs
 
-    const docData = (
-      globalData?.['docusaurus-plugin-content-docs']?.['default'] as any
-    )?.versions[0].docs;
-
-    count = {
-      blog: blogData.length,
-      tag: Object.keys(tagData).length ?? 0,
-      doc: docData?.length ?? 0,
-      project: projects?.length ?? 0,
-    };
+  const count: Count = {
+    blog: blogData.postNum,
+    tag: blogData.tagNum ?? 0,
+    doc: docData?.length ?? 0,
+    project: projects?.length ?? 0,
   }
 
   return (
-    <div
-      className={`row ${isNavbar ? 'bloginfo__card-navbar' : 'bloginfo__card'
-        }`}>
+    <div className={clsx(isNavbar ? styles.userCardNavbar : styles.userCard)}>
       <Link href="/about">
-        <img className="bloginfo__img" src={logoLink} alt="logo"></img>
+        <img className={styles.cardImg} src={logoLink} alt="logo"></img>
       </Link>
       <div>
-        <Link className="bloginfo__name" href="/">
+        <Link className={styles.name} href="about">
           {title}
         </Link>
       </div>
-      <div className="bloginfo__description"><h5>{tagline}</h5></div>
-      <div className="bloginfo__num">
-        <Link className="bloginfo__num-item" href="/archive">
+      <div className={styles.bio}>{bio}</div>
+      <div className={styles.num}>
+        <Link className={styles.numItem} href="/blog/archive">
           <Icon icon="carbon:blog" width="20" height="20" />
           {count.blog}
         </Link>
-        <Link className="bloginfo__num-item" href="/tags">
+        <Link className={styles.numItem} href="/blog/tags">
           <Icon icon="ri:price-tag-3-line" width="20" height="20" />
           {count.tag}
         </Link>
-        <Link className="bloginfo__num-item" href="/docs/Stack">
+        <Link className={styles.numItem} href="/docs/skill">
           <Icon icon="carbon:notebook" width="20" height="20" />
           {count.doc}
         </Link>
-        <Link className="bloginfo__num-item" href="/project" data-tips="website count">
+        <Link className={styles.numItem} href="/project" data-tips="project count">
           <Icon icon="ph:projector-screen" width="20" height="20" />
           {count.project}
         </Link>
       </div>
-      {/* <SocialLinks
+      <SocialLinks
         style={{
           maxWidth: '100%',
           padding: '0.5em 0',
-          justifyContent: 'space-evenly',
+          justifyContent: 'center',
+          gap: '0.5rem',
           ...(isNavbar ? { borderBottom: '1px solid #eee' } : null),
         }}
-      /> */}
+      />
     </div>
   );
 }
@@ -129,6 +123,10 @@ const TagsSection = ({ data }: { data: BlogTag[] }) => {
 };
 
 export default function BlogInfo() {
+  const globalData = useGlobalData();
+  const blogPluginData = globalData?.['docusaurus-plugin-content-blog']?.[
+    'default'
+  ] as any;
   const blogData = usePluginData('docusaurus-plugin-content-blog') as {
     posts: BlogPost[]
     postNum: number
@@ -137,6 +135,7 @@ export default function BlogInfo() {
   const docData = (
     usePluginData('docusaurus-plugin-content-docs') as { versions: { docs: BlogPost[] } }
   )?.versions[0].docs
+  const tagData = blogPluginData?.tags as BlogTags;
 
   const count: Count = {
     blog: blogData.postNum,
@@ -151,7 +150,7 @@ export default function BlogInfo() {
         <Fade direction='up' triggerOnce={true}>
 
           <div className="bloghome__posts-card bloginfo__user margin-bottom--md">
-            <BlogUser count={count} />
+            <BlogUser/>
           </div>
           <div className="bloghome__posts-card margin-bottom--md">
             <div className="row bloginfo__card">

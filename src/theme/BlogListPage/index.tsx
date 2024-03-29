@@ -6,10 +6,11 @@ import type { Props } from '@theme/BlogListPage'
 import BlogListPaginator from '@theme/BlogListPaginator'
 import BlogPostItems from '@theme/BlogPostItems'
 import SearchMetadata from '@theme/SearchMetadata'
-
+import UserCard from '@site/src/components/UserCard'
 import { ViewType, useViewType } from '@site/src/hooks/useViewType'
 import Translate from '@docusaurus/Translate'
 import { Icon } from '@iconify/react'
+// 博客网格展示时的内容
 import BlogPostGridItems from '../BlogPostGridItems'
 
 import styles from './styles.module.scss'
@@ -27,6 +28,7 @@ function BlogListPageMetadata(props: Props): JSX.Element {
   )
 }
 
+// 切换视图的按钮
 function ViewTypeSwitch({
   viewType,
   toggleViewType,
@@ -73,9 +75,14 @@ function BlogListPageContent(props: Props) {
         <div className={'col col--12'}>
           <>
             {isListView && (
-              <div className={styles.blogList}>
-                <BlogPostItems items={items} />
-              </div>
+              <>
+                <div className={styles.stickyUserCard}>
+                  <UserCard />
+                </div>
+                <div className={styles.blogList}>
+                  <BlogPostItems items={items} />
+                </div>
+              </>
             )}
             {isGridView && <BlogPostGridItems items={items} />}
           </>
