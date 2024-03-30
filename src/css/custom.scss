@@ -54,6 +54,8 @@
   --blog-item-shadow: 0 10px 18px #f1f5f9dd, 0 0 10px 0 #e4e4e7dd;
   --blog-item-shade: #f4f4f5;
 
+  --blog-usercard-color: hsla(35, 100%, 91%, 0.582);
+
   -webkit-font-smoothing: unset;
 
   color: hsl(214deg 37% 25%);
@@ -290,16 +292,7 @@ article .markdown > ul ol {
   font-size: 1rem; // 文档侧边栏字体大小
 }
 
-//这是右侧文档目录的配置
-table-of-contents__link--active {
-  filter: none !important;
-  color: var(--ifm-color-primary-light) !important;
-  opacity: .8;
-  transform: scale(1.02)!important;
-  transform-origin: left;
-}
-
-// 这可以修改博客页面的容器大小和布局，让
+// 这可以修改博客页面的容器大小和布局，让右侧侧边栏变大
 .blog-post-page .row {
   display: flex;
   flex-wrap: wrap;
@@ -310,9 +303,17 @@ table-of-contents__link--active {
   max-width: 1920px;
 }
 
+.table-of-contents__link--active {
+  filter: none !important;
+  color: var(--ifm-color-primary-dark) !important;
+  opacity: .8;
+  transform: scale(1.02)!important;
+  transform-origin: left;
+}
+
 .table-of-contents__link {
   // filter: grayscale(100%);
-  padding: 0.3rem 0 0.3rem 0.3rem;
+  padding: 0.3rem 0 0.3rem 1rem;
   border-radius: 10px;
   transition: filter 0.08s ease-in-out, background-color 0.08s ease-in-out;
   margin-top: -0.5rem;
@@ -332,12 +333,19 @@ table-of-contents__link--active {
 }
 
 .table-of-contents {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+
   // transition: filter 0.2s ease-in-out, background-color 0.2s ease-in-out;
   // a {
   //   color:#c1defa;
   // }
 }
+
+html[data-theme='dark'] .table-of-contents__link:hover{
+  background-color:  #2e303d !important;
+}
+
 
 html[data-theme='dark'] .table-of-contents__link:hover{
   background-color:  #2e303d !important;
@@ -365,6 +373,10 @@ html[data-theme='dark'] .table-of-contents__link:hover{
       font-size: 1.2em;
     }
   }
+  .navbar-sidebar {
+    display: block;
+    height: 100vh;
+  }
 }
 
 /* 导航收缩相应尺寸调大 */
@@ -375,12 +387,12 @@ html[data-theme='dark'] .table-of-contents__link:hover{
   }
 
   .navbar__toggle {
-    display: inherit;
+    display: visible;
   }
 
-  .navbar__item {
-    display: none;
-  }
+  // .navbar__item {
+  //   display: none;
+  // }
 
   .navbar__search-input {
     width: 9rem;

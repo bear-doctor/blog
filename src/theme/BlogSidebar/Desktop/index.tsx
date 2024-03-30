@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react'
 import { translate } from '@docusaurus/Translate'
 import { useBlogPost } from '@docusaurus/theme-common/internal'
 import type { Props } from '@theme/BlogSidebar/Desktop'
+import UserCard from '@site/src/components/UserCard'
 
 import styles from './styles.module.scss'
 
@@ -29,14 +30,17 @@ export default function BlogSidebarDesktop({ sidebar }: Props): JSX.Element {
           message: 'Blog recent posts navigation',
           description: 'The ARIA label for recent posts in the blog sidebar',
         })}
-        style={{ opacity: isHovered ? 1 : 0 }}
+        // 如果鼠标悬停，opacity为1
+        // style={{ opacity: isHovered ? 1 : 0 }}
       >
-        {isBlogPostPage && (
+        {/* 撤回按钮 */}
+        {/* {isBlogPostPage && (
           <div className={styles.backButton} onClick={handleBack}>
             <Icon icon="ri:arrow-go-back-line"></Icon>
           </div>
-        )}
-
+        )} */}
+        {/* 用户卡 */}
+        {/* <div className={styles.blogUser}><UserCard /></div> */}
         <Link href="/blog" className={clsx(styles.sidebarItemTitle, 'margin-bottom--sm')}>
           {sidebar.title}
         </Link>
