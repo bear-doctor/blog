@@ -1,6 +1,6 @@
 ---
 title: docusaurus博客常用的文档样式
-description: 修改博客主题
+description: 记录日常使用的一些样式，方便使用时直接复制
 authors: bear
 date: 2024-03-25
 tags: [website]
@@ -86,7 +86,6 @@ import HighLight from '@site/src/components/HighLight'
 <Highlight>默认颜色</Highlight> 和 <Highlight color="#25c2a0">绿色</Highlight>
 </BrowserWindow>
 
-
 ## 选项卡
 官网文档讲述了选项卡如何导入，自定义选项卡。更多选项卡样式查看[官方文档](https://docusaurus.io/zh-CN/docs/markdown-features/tabs)
 
@@ -169,6 +168,47 @@ import TabItem from '@theme/TabItem';
   <TabItem value="unix" label="Unix">Unix is unix.</TabItem>
 </Tabs>
 </BrowserWindow>
+
+## 折叠块
+```html
+<details>
+  <summary>Toggle me!</summary>
+  <div>
+    <div>This is the detailed content</div>
+    <br/>
+    <details>
+      <summary>
+        Nested toggle! Some surprise inside...
+      </summary>
+      <div>😲😲😲😲😲</div>
+    </details>
+  </div>
+</details>
+```
+
+<details>
+  <summary>Toggle me!</summary>
+  <div>
+    <div>This is the detailed content</div>
+    <br/>
+    <details>
+      <summary>
+        Nested toggle! Some surprise inside...
+      </summary>
+      <div>😲😲😲😲😲</div>
+    </details>
+  </div>
+</details>
+
+## 链接
+### 连接到当前文档的其他部分
+```markdown
+[高亮](#高亮块)
+```
+[高亮](#高亮块)
+
+### 连接到另一个文档
+[对博客主题的修改](/blog/interest/modified_website.mdx)
 
 ## 代码块
 常见的代码块配置有以下几个
@@ -301,10 +341,6 @@ export default MyComponent;
 
 ## 浏览器窗口
 - 官方浏览器窗口样式
-<BrowserWindow url={"https://drbear.vercel.app"}>
-欢迎来到小熊博士的小窝！
-</BrowserWindow>
-
 ```javascript title="官方浏览器窗口样式"
 import BrowserWindow from '@site/src/components/BrowserWindow';
 
@@ -313,11 +349,11 @@ import BrowserWindow from '@site/src/components/BrowserWindow';
 </BrowserWindow>
 ```
 
-- [shake博主](https://www.shaking.site/)设计的浏览器窗口样式
-<BrowserWindow2 url={"https://drbear.vercel.app"}>
+<BrowserWindow url={"https://drbear.vercel.app"}>
 欢迎来到小熊博士的小窝！
-</BrowserWindow2>
+</BrowserWindow>
 
+- [shake博主](https://www.shaking.site/)设计的浏览器窗口样式
 ```javascript title="shake博主设计的浏览器窗口样式"
 import BrowserWindow from '@site/src/components/BrowserWindow';
 
@@ -325,6 +361,9 @@ import BrowserWindow from '@site/src/components/BrowserWindow';
 欢迎来到小熊博士的小窝！
 </BrowserWindow>
 ```
+<BrowserWindow2 url={"https://drbear.vercel.app"}>
+欢迎来到小熊博士的小窝！
+</BrowserWindow2>
 
 ## 标题和目录
 标题就用markdown的标准语法即可，而目录有自动生成的方法。可以查看[官方文档](https://docusaurus.io/zh-CN/docs/markdown-features/toc#inline-table-of-contents)。
