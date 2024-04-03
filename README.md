@@ -3,7 +3,7 @@
 </h2><br>
 
 <pre align="center">
- <a href="https://kuizuo.cn">🖥 Online Preview</a>
+ <a href="https://drbear.vercel.app/">🖥 Online Preview</a>
 </pre>
 
 ## 👋 Introduction
